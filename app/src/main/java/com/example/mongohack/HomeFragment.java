@@ -90,7 +90,6 @@ public class HomeFragment extends Fragment {
 
         getActivity().setTitle("Trending Topics");
 
-
         requestPermission();
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(getActivity());
         if (ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED )  {
@@ -221,11 +220,11 @@ public class HomeFragment extends Fragment {
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
-                String value=adapter.getItem(position);
-                Toast.makeText(getActivity(),value,Toast.LENGTH_SHORT).show();
+                //String value=adapter.getItem(position);
+                //Toast.makeText(getActivity(),value,Toast.LENGTH_SHORT).show();
 
                 Intent intent=new Intent(getActivity(),HashtagActivity.class);
-                intent.putExtra("hashtagName",value);
+                intent.putExtra("hashtagId",hashIds.get(position).toString());
                 startActivity(intent);
             }
         });
