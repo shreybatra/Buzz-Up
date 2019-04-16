@@ -1,6 +1,7 @@
 package com.example.mongohack;
 
 import android.Manifest;
+import android.app.ListActivity;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.Location;
@@ -28,6 +29,7 @@ import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.mongodb.stitch.android.core.Stitch;
 import com.mongodb.stitch.android.core.StitchAppClient;
+import com.mongodb.stitch.android.services.mongodb.remote.RemoteFindIterable;
 import com.mongodb.stitch.android.services.mongodb.remote.RemoteMongoClient;
 import com.mongodb.stitch.android.services.mongodb.remote.RemoteMongoCollection;
 import com.mongodb.stitch.android.services.mongodb.remote.SyncFindIterable;
@@ -58,10 +60,13 @@ public class HomeFragment extends Fragment {
     public static RemoteMongoCollection topics;
     private FusedLocationProviderClient fusedLocationClient;
 
+    public ArrayList<String> hashtagsList = new ArrayList<>();
+
     public double lat=0.0;
     public double lng=0.0;
 
     String[] hashtags = new String[]{};//=new String[]{"Hashtag1","Hashtag2","Hashtag3","Hashtag4","Hashtag5","Hashtag6","Hashtag7","Hashtag8","Hashtag9","Hashtag10","Hashtag11","Hashtag12","Hashtag13","Hashtag14","Hashtag15","Hashtag16","Hashtag17","Hashtag18","Hashtag19","Hashtag20"};
+    Integer[] hashtagsId = new Integer[]{};
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -84,29 +89,49 @@ public class HomeFragment extends Fragment {
 //        }
 //    }
 
-    private String[] getTopics() {
-        return new String[]{"Hashtag1","Hashtag2","Hashtag3","Hashtag4","Hashtag5","Hashtag6","Hashtag7","Hashtag8","Hashtag9","Hashtag10","Hashtag11","Hashtag12","Hashtag13","Hashtag14","Hashtag15","Hashtag16","Hashtag17","Hashtag18","Hashtag19","Hashtag20"};
-//        final SyncFindIterable task = topics.sync().find();
-//
-//        String[] topicstr;
-//
-//        Document geoWithin = new Document("$match", new Document()
-//                .append("location", new Document(
-//                    "$geoWithin",new Document(
-//                            "$centerSphere", new ArrayList<Double>(Arrays.asList(lat,lng))
-//                    )
-//                )
-//                )
-//
-//        );
-//
-//        ArrayList<Document> d = new ArrayList<Document>();
-//        d.add(new Document(
-//                "$geoWithin", new Document().append(
-//
-//        )
-//        ));
-//
+    public String[] getTopics() {
+
+        String[] topicStr = new String[]{};
+
+//        hashtagsList = new ArrayList<String>();
+//        hashtagsList = new ArrayList<>();
+
+
+        RemoteFindIterable b = topics.find();
+        final ArrayList<Document> docs = new ArrayList<>();
+        b.into(docs).addOnCompleteListener(new OnCompleteListener() {
+            @Override
+            public void onComplete(@NonNull Task task) {
+                if(task.isSuccessful())
+                {
+                    hashtagsList.clear();
+                    for(Document d : docs)
+                    {
+                        hashtagsList.add(d.getString("topic_name"));
+                    }
+                    hashtags = new String[]{"abcda","ascjac"};
+////                    ArrayList<String> hashtagsList = new ArrayList<>();
+//                    final List<Document> items = (List<Document>) task.getResult();
+//                    Log.d("SIZE", String.valueOf(items.size()));
+////                    hashtagsList = items;
+//                    int n = items.size();
+//                    for(int i=0;i<n;i++){
+//                        Document documentFetched = items.get(i);
+//                        Log.d("ADDED", documentFetched.getString("topic_name"));
+//                        hashtagsList.add( documentFetched.getString("topic_name") );
+//                        Log.d("HASHSIZE", String.valueOf(hashtagsList.size()));
+//                        //hashtagsIdList.add( documentFetched.getString("owner_id") );
+//                    }
+                }
+                Log.d("INSIDE", hashtagsList.toString());
+                hashtagsList.toArray(topicStr);
+            }
+        });
+
+        Log.d("OUTSIDE", String.valueOf(topicStr.length));
+//        hashtagsList.toArray(topicStr);
+//        hashtags = new String[]{"ackjbckac"};
+        Log.d("TOPICSTR", topicStr.toString());
 //        b.add(new BsonDocument().append(
 //                "$match", new BsonDocument().append(
 //                        "location", new BsonDocument().append(
@@ -130,7 +155,8 @@ public class HomeFragment extends Fragment {
 //                }
 //            }
 //        })
-
+        //return new String[]{"Hashtag1","Hashtag2","Hashtag3","Hashtag4","Hashtag5","Hashtag6","Hashtag7","Hashtag8","Hashtag9","Hashtag10","Hashtag11","Hashtag12","Hashtag13","Hashtag14","Hashtag15","Hashtag16","Hashtag17","Hashtag18","Hashtag19","Hashtag20"};
+        return topicStr;
     }
 
     @Override
@@ -140,16 +166,11 @@ public class HomeFragment extends Fragment {
         getActivity().setTitle("Trending Topics");
 
 //        requestPermission();
-//
 //        fusedLocationClient = LocationServices.getFusedLocationProviderClient(getActivity());
-//
-//
 //        if (ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED )  {
 //            Log.d("SUC", "Login done.");
 //            return;
 //        }
-//
-//
 //        fusedLocationClient.getLastLocation()
 //                .addOnSuccessListener(new OnSuccessListener<Location>() {
 //                    @Override
@@ -163,16 +184,18 @@ public class HomeFragment extends Fragment {
 //                    }
 //                });
 //
-//        client = Stitch.getDefaultAppClient();
-//        final RemoteMongoClient rc = client.getServiceClient(RemoteMongoClient.factory,"mongodb-atlas");
-//        topics = rc.getDatabase("mongohack").getCollection("topics");
+        client = Stitch.getDefaultAppClient();
+        final RemoteMongoClient rc = client.getServiceClient(RemoteMongoClient.factory,"mongodb-atlas");
+        topics = rc.getDatabase("mongohack").getCollection("topics");
 //        topics.sync().configure(
 //                DefaultSyncConflictResolvers.localWins(),
 //                new MyUpdateListener(),
 //                new MyErrorListener()
 //        );
 
-        hashtags = getTopics();
+//        hashtags = new String[]{"cacacacacac"};
+        getTopics();
+        Log.d("STRINGS", hashtags.toString());
 
         listView=view.findViewById(R.id.listView);
         adapter = new ArrayAdapter<String>(getActivity(),

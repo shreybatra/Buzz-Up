@@ -12,12 +12,27 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
+import android.widget.Toast;
 
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
+import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
+import com.mongodb.lang.NonNull;
+import com.mongodb.stitch.android.core.Stitch;
+import com.mongodb.stitch.android.core.StitchAppClient;
+import com.mongodb.stitch.android.services.mongodb.remote.RemoteMongoCollection;
 
+import org.bson.BsonArray;
+import org.bson.BsonDocument;
+import org.bson.Document;
+
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Calendar;
+import java.util.Date;
+import java.util.GregorianCalendar;
 
 public class AddHashtagActivity extends AppCompatActivity {
 
@@ -26,6 +41,12 @@ public class AddHashtagActivity extends AppCompatActivity {
 
     EditText dateEditText, locationEditText;
     private int mYear, mMonth, mDay;
+    private Date tillDate;
+    public double lat=0.0;
+    public double lng=0.0;
+
+    private StitchAppClient client;
+    public static RemoteMongoCollection topics;
 
     private FusedLocationProviderClient fusedLocationClient;
 
@@ -42,6 +63,9 @@ public class AddHashtagActivity extends AppCompatActivity {
         locationButton = findViewById(R.id.locationButton);
         submitButton = findViewById(R.id.submitButton);
 
+        client= Stitch.getDefaultAppClient();
+        topics = HomeFragment.topics;
+
         dateButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -55,9 +79,15 @@ public class AddHashtagActivity extends AppCompatActivity {
                             @Override
                             public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
                                 dateEditText.setText(String.valueOf(dayOfMonth) + "-" + String.valueOf(monthOfYear + 1) + "-" + String.valueOf(year));
+                                Calendar c1 = GregorianCalendar.getInstance();
+                                c1.set(year, monthOfYear, dayOfMonth+1);
+                                tillDate = c1.getTime();
+                                Log.d("TAG",tillDate.toString());
                             }
                         }, mYear, mMonth, mDay);
+
                 datePickerDialog.show();
+
             }
         });
 
@@ -80,6 +110,8 @@ public class AddHashtagActivity extends AppCompatActivity {
 
                                 if (location != null) {
                                     locationEditText.setText(location.toString());
+                                    lng = location.getLongitude();
+                                    lat = location.getLatitude();
                                 }
                             }
                         });
@@ -90,7 +122,38 @@ public class AddHashtagActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 String newHashtag = hashtagEditText.getText().toString();
-                // database mai add hoga
+                Log.d("hashtag name",newHashtag);
+
+                Document d = new Document()
+                        .append("topic_name",newHashtag)
+                        .append(
+                                "location",new Document().append(
+                                        "type","Point"
+                                ).append(
+                                "coordinates",
+                                        new ArrayList<Double>( Arrays.asList(lng,lat) )
+                                )
+                        )
+                        .append("created_at",new Date())
+                        .append("active_till_date",tillDate)
+                        .append("owner_id",client.getAuth().getUser().getId());
+
+
+                Task findtask = topics.insertOne(d);
+
+                findtask.addOnCompleteListener(new OnCompleteListener() {
+                    @Override
+                    public void onComplete(@NonNull Task task) {
+                        if(task.isSuccessful())
+                        {
+                            Log.d("hashtag adding TAG", task.getResult().toString());
+                            Toast.makeText(AddHashtagActivity.this, "hashtag could added", Toast.LENGTH_SHORT).show();
+                        }
+                        else{
+                            Toast.makeText(AddHashtagActivity.this, "hashtag could not be added", Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                });
             }
         });
 

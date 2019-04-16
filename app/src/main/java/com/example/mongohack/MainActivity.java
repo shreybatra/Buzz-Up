@@ -1,6 +1,5 @@
 package com.example.mongohack;
 
-import com.example.mongohack.R;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
