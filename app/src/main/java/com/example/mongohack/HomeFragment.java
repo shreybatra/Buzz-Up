@@ -1,7 +1,7 @@
 package com.example.mongohack;
 
 import android.Manifest;
-import android.app.ListActivity;
+
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.Location;
@@ -27,9 +27,9 @@ import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
+import com.mongodb.client.MongoCollection;
 import com.mongodb.stitch.android.core.Stitch;
 import com.mongodb.stitch.android.core.StitchAppClient;
-import com.mongodb.stitch.android.services.mongodb.remote.RemoteFindIterable;
 import com.mongodb.stitch.android.services.mongodb.remote.RemoteMongoClient;
 import com.mongodb.stitch.android.services.mongodb.remote.RemoteMongoCollection;
 import com.mongodb.stitch.android.services.mongodb.remote.SyncFindIterable;
@@ -38,20 +38,17 @@ import com.mongodb.stitch.core.services.mongodb.remote.sync.DefaultSyncConflictR
 import com.mongodb.stitch.core.services.mongodb.remote.sync.ErrorListener;
 import com.mongodb.stitch.core.services.mongodb.remote.sync.internal.ChangeEvent;
 
-import org.bson.BsonArray;
-import org.bson.BsonDocument;
 import org.bson.BsonObjectId;
 import org.bson.BsonValue;
 import org.bson.Document;
-import org.bson.conversions.Bson;
 import org.bson.types.ObjectId;
 
-import java.io.IOException;
-import java.sql.Array;
 import java.util.ArrayList;
-import java.util.Arrays;
+
 import java.util.List;
 import java.util.Set;
+
+import static java.util.Arrays.asList;
 
 public class HomeFragment extends Fragment {
 
@@ -60,12 +57,13 @@ public class HomeFragment extends Fragment {
     ArrayAdapter<String> adapter;
 
     private StitchAppClient client;
-//    private RemoteMongoClient rClient;
     public static RemoteMongoCollection topics;
     private FusedLocationProviderClient fusedLocationClient;
+    MongoCollection<Document> localCollection;
 
 
     public ArrayList<String> hashtagsList = new ArrayList<>();
+    List<BsonObjectId> syncids = new ArrayList<>();
 
 
     public double lat=0.0;
@@ -109,7 +107,6 @@ public class HomeFragment extends Fragment {
                         }
                     }
                 });
-
 
 
         client = Stitch.getDefaultAppClient();
@@ -186,7 +183,50 @@ public class HomeFragment extends Fragment {
 
     public void getTopics() {
 
-        SyncFindIterable b = topics.sync().find();
+        Document filter = new Document()
+                .append("lat", lat)
+                .append("lng", lng)
+                .append("radius", 1);
+        syncids.clear();
+
+        client.callFunction("getTopicIds", asList(filter.toJson()), ArrayList.class)
+            .addOnCompleteListener(new OnCompleteListener<ArrayList>() {
+                @Override
+                public void onComplete(@NonNull Task<ArrayList> task) {
+                    if (task.isSuccessful()) {
+                        List<Document> items = task.getResult();
+
+                        for (Document doc : items) {
+
+                            syncids.add(new BsonObjectId(doc.getObjectId("_id")));
+
+                        }
+                        topics.sync().syncMany(syncids.toArray(new BsonObjectId[0]));
+                        getGeoTopics();
+                    } else
+                        Log.e("IDSS", task.getException().toString());
+                }
+            });
+
+    }
+
+    private void getGeoTopics() {
+
+        SyncFindIterable b;
+        if(syncids.size() != 0)
+        {
+            Document d = new Document("_id", new Document(
+                    "$in", syncids
+            ));
+            Log.d("DOCC", syncids.toString());
+            b = topics.sync().find(d);
+        }
+        else
+        {
+            b = topics.sync().find();
+        }
+
+
         final ArrayList<Document> docs = new ArrayList<>();
         b.into(docs).addOnCompleteListener(new OnCompleteListener() {
             @Override
