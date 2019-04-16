@@ -12,6 +12,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.location.FusedLocationProviderClient;
@@ -39,7 +40,7 @@ public class AddHashtagActivity extends AppCompatActivity {
     EditText hashtagEditText;
     Button submitButton, dateButton, locationButton;
 
-    EditText dateEditText, locationEditText;
+    TextView dateEditText, locationEditText;
     private int mYear, mMonth, mDay;
     private Date tillDate;
     public double lat=0.0;
@@ -109,9 +110,10 @@ public class AddHashtagActivity extends AppCompatActivity {
                             public void onSuccess(Location location) {
 
                                 if (location != null) {
-                                    locationEditText.setText(location.toString());
+
                                     lng = location.getLongitude();
                                     lat = location.getLatitude();
+                                    locationEditText.setText("Lat-" + lat + " Lng-"+lng);
                                 }
                             }
                         });
@@ -139,7 +141,7 @@ public class AddHashtagActivity extends AppCompatActivity {
                         .append("owner_id",client.getAuth().getUser().getId());
 
 
-                Task findtask = topics.insertOne(d);
+                Task findtask = topics.sync().insertOne(d);
 
                 findtask.addOnCompleteListener(new OnCompleteListener() {
                     @Override
@@ -147,10 +149,12 @@ public class AddHashtagActivity extends AppCompatActivity {
                         if(task.isSuccessful())
                         {
                             Log.d("hashtag adding TAG", task.getResult().toString());
-                            Toast.makeText(AddHashtagActivity.this, "hashtag could added", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(AddHashtagActivity.this, "hashtag could be added", Toast.LENGTH_SHORT).show();
+                            finish();
                         }
                         else{
                             Toast.makeText(AddHashtagActivity.this, "hashtag could not be added", Toast.LENGTH_SHORT).show();
+                            finish();
                         }
                     }
                 });
