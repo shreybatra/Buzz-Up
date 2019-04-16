@@ -40,9 +40,11 @@ import com.mongodb.stitch.core.services.mongodb.remote.sync.internal.ChangeEvent
 
 import org.bson.BsonArray;
 import org.bson.BsonDocument;
+import org.bson.BsonObjectId;
 import org.bson.BsonValue;
 import org.bson.Document;
 import org.bson.conversions.Bson;
+import org.bson.types.ObjectId;
 
 import java.io.IOException;
 import java.sql.Array;
@@ -60,7 +62,7 @@ public class HomeFragment extends Fragment {
     private StitchAppClient client;
 //    private RemoteMongoClient rClient;
     public static RemoteMongoCollection topics;
-//    private FusedLocationProviderClient fusedLocationClient;
+    private FusedLocationProviderClient fusedLocationClient;
 
 
     public ArrayList<String> hashtagsList = new ArrayList<>();
@@ -71,7 +73,8 @@ public class HomeFragment extends Fragment {
 
 
     String[] hashtags = new String[]{};
-    Integer[] hashtagsId = new Integer[]{};
+    ArrayList<ObjectId> hashIds = new ArrayList<>();
+
 
 
     @Override
@@ -87,25 +90,28 @@ public class HomeFragment extends Fragment {
 
         getActivity().setTitle("Trending Topics");
 
-//        requestPermission();
-//        fusedLocationClient = LocationServices.getFusedLocationProviderClient(getActivity());
-//        if (ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED )  {
-//            Log.d("SUC", "Login done.");
-//            return;
-//        }
-//        fusedLocationClient.getLastLocation()
-//                .addOnSuccessListener(new OnSuccessListener<Location>() {
-//                    @Override
-//                    public void onSuccess(Location location) {
-//
-//                        if (location != null) {
-//                            lat =location.getLatitude();
-//                            lng =location.getLongitude();
-////                            locationEditText.setText(location.toString());
-//                        }
-//                    }
-//                });
-//
+
+        requestPermission();
+        fusedLocationClient = LocationServices.getFusedLocationProviderClient(getActivity());
+        if (ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED )  {
+            Log.d("SUC", "Login done.");
+            return;
+        }
+        fusedLocationClient.getLastLocation()
+                .addOnSuccessListener(new OnSuccessListener<Location>() {
+                    @Override
+                    public void onSuccess(Location location) {
+
+                        if (location != null) {
+                            lat =location.getLatitude();
+                            lng =location.getLongitude();
+//                            locationEditText.setText(location.toString());
+                        }
+                    }
+                });
+
+
+
         client = Stitch.getDefaultAppClient();
         final RemoteMongoClient rc = client.getServiceClient(RemoteMongoClient.factory,"mongodb-atlas");
         topics = rc.getDatabase("mongohack").getCollection("topics");
@@ -121,7 +127,6 @@ public class HomeFragment extends Fragment {
         hashtags = new String[]{"Loading topics....!"};
 
         setView();
-        getTopics();
 
 
         searchEditText = view.findViewById(R.id.searchEditText);
@@ -175,6 +180,7 @@ public class HomeFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
+
         getTopics();
     }
 
@@ -188,9 +194,11 @@ public class HomeFragment extends Fragment {
                 if(task.isSuccessful())
                 {
                     hashtagsList.clear();
+                    hashIds.clear();
                     for(Document d : docs)
                     {
                         hashtagsList.add("#" + d.getString("topic_name"));
+                        hashIds.add(d.getObjectId("_id"));
                     }
 
                 }
@@ -206,7 +214,6 @@ public class HomeFragment extends Fragment {
 
     private void setView()
     {
-
         adapter = new ArrayAdapter<String>(getActivity(),
                 android.R.layout.simple_list_item_1, android.R.id.text1, hashtags);
         listView.setAdapter(adapter);
@@ -223,7 +230,7 @@ public class HomeFragment extends Fragment {
             }
         });
     }
-//    private void requestPermission(){
-//        ActivityCompat.requestPermissions(this,new String[]{Manifest.permission.ACCESS_FINE_LOCATION},1);
-//    }
+    private void requestPermission(){
+        ActivityCompat.requestPermissions(getActivity(),new String[]{Manifest.permission.ACCESS_FINE_LOCATION},1);
+    }
 }
