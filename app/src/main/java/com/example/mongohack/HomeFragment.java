@@ -44,10 +44,12 @@ import org.bson.BsonValue;
 import org.bson.Document;
 import org.bson.conversions.Bson;
 
+import java.io.IOException;
 import java.sql.Array;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Set;
 
 public class HomeFragment extends Fragment {
 
@@ -56,17 +58,21 @@ public class HomeFragment extends Fragment {
     ArrayAdapter<String> adapter;
 
     private StitchAppClient client;
-    private RemoteMongoClient rClient;
+//    private RemoteMongoClient rClient;
     public static RemoteMongoCollection topics;
-    private FusedLocationProviderClient fusedLocationClient;
+//    private FusedLocationProviderClient fusedLocationClient;
+
 
     public ArrayList<String> hashtagsList = new ArrayList<>();
+
 
     public double lat=0.0;
     public double lng=0.0;
 
-    String[] hashtags = new String[]{};//=new String[]{"Hashtag1","Hashtag2","Hashtag3","Hashtag4","Hashtag5","Hashtag6","Hashtag7","Hashtag8","Hashtag9","Hashtag10","Hashtag11","Hashtag12","Hashtag13","Hashtag14","Hashtag15","Hashtag16","Hashtag17","Hashtag18","Hashtag19","Hashtag20"};
+
+    String[] hashtags = new String[]{};
     Integer[] hashtagsId = new Integer[]{};
+
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -74,90 +80,6 @@ public class HomeFragment extends Fragment {
         return inflater.inflate(R.layout.fragment_home, container, false);
     }
 
-//    private class MyUpdateListener implements ChangeEventListener<Document> {
-//
-//        @Override
-//        public void onEvent(BsonValue documentId, ChangeEvent<Document> event) {
-//
-//        }
-//    }
-//
-//    private class MyErrorListener implements ErrorListener {
-//        @Override
-//        public void onError(BsonValue documentId, Exception error) {
-//
-//        }
-//    }
-
-    public String[] getTopics() {
-
-        String[] topicStr = new String[]{};
-
-//        hashtagsList = new ArrayList<String>();
-//        hashtagsList = new ArrayList<>();
-
-
-        RemoteFindIterable b = topics.find();
-        final ArrayList<Document> docs = new ArrayList<>();
-        b.into(docs).addOnCompleteListener(new OnCompleteListener() {
-            @Override
-            public void onComplete(@NonNull Task task) {
-                if(task.isSuccessful())
-                {
-                    hashtagsList.clear();
-                    for(Document d : docs)
-                    {
-                        hashtagsList.add(d.getString("topic_name"));
-                    }
-                    hashtags = new String[]{"abcda","ascjac"};
-////                    ArrayList<String> hashtagsList = new ArrayList<>();
-//                    final List<Document> items = (List<Document>) task.getResult();
-//                    Log.d("SIZE", String.valueOf(items.size()));
-////                    hashtagsList = items;
-//                    int n = items.size();
-//                    for(int i=0;i<n;i++){
-//                        Document documentFetched = items.get(i);
-//                        Log.d("ADDED", documentFetched.getString("topic_name"));
-//                        hashtagsList.add( documentFetched.getString("topic_name") );
-//                        Log.d("HASHSIZE", String.valueOf(hashtagsList.size()));
-//                        //hashtagsIdList.add( documentFetched.getString("owner_id") );
-//                    }
-                }
-                Log.d("INSIDE", hashtagsList.toString());
-                hashtagsList.toArray(topicStr);
-            }
-        });
-
-        Log.d("OUTSIDE", String.valueOf(topicStr.length));
-//        hashtagsList.toArray(topicStr);
-//        hashtags = new String[]{"ackjbckac"};
-        Log.d("TOPICSTR", topicStr.toString());
-//        b.add(new BsonDocument().append(
-//                "$match", new BsonDocument().append(
-//                        "location", new BsonDocument().append(
-//                                "$geoWithin", new BsonDocument().append(
-//                                        "$centerSphere", new BsonArray().add(
-//                                                new BsonArray().add(lat).add(lng);
-//                                        )
-//                                )
-//                        )
-//                )
-//        ));
-//
-//        final Task <Document> findtask = topics.sync().aggregate(b).first();
-//
-//        findtask.addOnCompleteListener(new OnCompleteListener<Document>() {
-//            @Override
-//            public void onComplete(@NonNull Task<Document> task) {
-//                if(task.isSuccessful())
-//                {
-//                    Log.d("TAG", task.getResult().toString());
-//                }
-//            }
-//        })
-        //return new String[]{"Hashtag1","Hashtag2","Hashtag3","Hashtag4","Hashtag5","Hashtag6","Hashtag7","Hashtag8","Hashtag9","Hashtag10","Hashtag11","Hashtag12","Hashtag13","Hashtag14","Hashtag15","Hashtag16","Hashtag17","Hashtag18","Hashtag19","Hashtag20"};
-        return topicStr;
-    }
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
@@ -187,32 +109,20 @@ public class HomeFragment extends Fragment {
         client = Stitch.getDefaultAppClient();
         final RemoteMongoClient rc = client.getServiceClient(RemoteMongoClient.factory,"mongodb-atlas");
         topics = rc.getDatabase("mongohack").getCollection("topics");
-//        topics.sync().configure(
-//                DefaultSyncConflictResolvers.localWins(),
-//                new MyUpdateListener(),
-//                new MyErrorListener()
-//        );
 
-//        hashtags = new String[]{"cacacacacac"};
+        topics.sync().configure(
+                DefaultSyncConflictResolvers.localWins(),
+                new MyUpdateListener(),
+                new MyErrorListener()
+        );
+
+        listView = view.findViewById(R.id.listView);
+
+        hashtags = new String[]{"Loading topics....!"};
+
+        setView();
         getTopics();
-        Log.d("STRINGS", hashtags.toString());
 
-        listView=view.findViewById(R.id.listView);
-        adapter = new ArrayAdapter<String>(getActivity(),
-                android.R.layout.simple_list_item_1, android.R.id.text1, hashtags);
-        listView.setAdapter(adapter);
-
-        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
-                String value=adapter.getItem(position);
-                Toast.makeText(getActivity(),value,Toast.LENGTH_SHORT).show();
-
-                Intent intent=new Intent(getActivity(),HashtagActivity.class);
-                intent.putExtra("hashtagName",value);
-                startActivity(intent);
-            }
-        });
 
         searchEditText = view.findViewById(R.id.searchEditText);
         searchEditText.addTextChangedListener(new TextWatcher() {
@@ -232,6 +142,86 @@ public class HomeFragment extends Fragment {
             }
         });
 
+    }
+
+    private class MyErrorListener implements ErrorListener {
+        @Override
+        public void onError(BsonValue documentId, Exception error) {
+            Log.e("Stitch", error.getLocalizedMessage());
+            Set<BsonValue> docsThatNeedToBeFixed = topics.sync().getPausedDocumentIds();
+            for (BsonValue doc_id : docsThatNeedToBeFixed) {
+                // Add your logic to inform the user.
+                // When errors have been resolved, call
+                topics.sync().resumeSyncForDocument(doc_id);
+            }
+            // refresh the app view, etc.
+        }
+    }
+
+    private class MyUpdateListener implements ChangeEventListener<Document> {
+        @Override
+        public void onEvent(final BsonValue documentId, final ChangeEvent<Document> event) {
+            if (!event.hasUncommittedWrites()) {
+                Log.d("SYNC", documentId.toString() + " synced from local");
+            }
+            else
+            {
+                Log.d("SYNC", documentId.toString() + " synced from atlas");
+            }
+            // refresh the app view, etc.
+        }
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        getTopics();
+    }
+
+    public void getTopics() {
+
+        SyncFindIterable b = topics.sync().find();
+        final ArrayList<Document> docs = new ArrayList<>();
+        b.into(docs).addOnCompleteListener(new OnCompleteListener() {
+            @Override
+            public void onComplete(@NonNull Task task) {
+                if(task.isSuccessful())
+                {
+                    hashtagsList.clear();
+                    for(Document d : docs)
+                    {
+                        hashtagsList.add("#" + d.getString("topic_name"));
+                    }
+
+                }
+                if(hashtags.length > 0)
+                    hashtags = hashtagsList.toArray(new String[0]);
+                else
+                    hashtags = new String[]{"No topics Found."};
+                setView();
+            }
+        });
+
+    }
+
+    private void setView()
+    {
+
+        adapter = new ArrayAdapter<String>(getActivity(),
+                android.R.layout.simple_list_item_1, android.R.id.text1, hashtags);
+        listView.setAdapter(adapter);
+
+        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
+                String value=adapter.getItem(position);
+                Toast.makeText(getActivity(),value,Toast.LENGTH_SHORT).show();
+
+                Intent intent=new Intent(getActivity(),HashtagActivity.class);
+                intent.putExtra("hashtagName",value);
+                startActivity(intent);
+            }
+        });
     }
 //    private void requestPermission(){
 //        ActivityCompat.requestPermissions(this,new String[]{Manifest.permission.ACCESS_FINE_LOCATION},1);
