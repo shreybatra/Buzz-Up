@@ -1,8 +1,10 @@
 package com.example.mongohack;
 
+import android.Manifest;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
@@ -30,8 +32,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     SignInButton signInButton;
     public static StitchAppClient client=null;
 
-//    private SharedPreferences sharedPref;
-//    private SharedPreferences.Editor editor;
 
     public MainActivity() {
     }
@@ -41,25 +41,15 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        //sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
-//        File f = new File(
-//                "/data/data/your_application_package/shared_prefs/LoginFile.xml");
-//        if (f.exists())
-        //sharedPref = getSharedPreferences("LoginFile",getApplicationContext().MODE_PRIVATE);
-        //editor = sharedPref.edit();
+        requestPermission1();
+        requestPermission2();
+
 
         signInButton = findViewById(R.id.button1);
         signInButton.setOnClickListener(this);
 
         client = Stitch.initializeDefaultAppClient(getResources().getString(R.string.initialiseClient));
 
-//        String ifGCSaved = sharedPref.getString( getString(R.string.savedGCCode) ,null);
-//        if(ifGCSaved!=null){
-//            final GoogleCredential googleCredential = new GoogleCredential(ifGCSaved);
-//            Log.d("shared prf got", "got");
-//            loginStitchClient(googleCredential);
-//
-//        }
 
     }
 
@@ -99,35 +89,30 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
             final GoogleCredential googleCredential =
                     new GoogleCredential(account.getServerAuthCode());
-            //Log.d("first time","first time made");
 
-//            editor.putString( getString(R.string.savedGCCode), account.getServerAuthCode() );
-//            editor.commit();
-
-            //loginStitchClient(googleCredential);
             Stitch.getDefaultAppClient().getAuth().loginWithCredential(googleCredential).addOnCompleteListener(
                     new OnCompleteListener<StitchUser>() {
                         @Override
                         public void onComplete(@NonNull final Task<StitchUser> task) {
                             if (task.isSuccessful()) {
-                                //Log.d("SUC", "Login done.");
                                 startActivity(new Intent(getApplicationContext(),UserActivity.class));
-                                //finish();
                             } else {
-                                //Log.d(TAG, "Error logging in with Google", task.getException());
-                                //Toast.makeText(MainActivity.this, "error logging with google", Toast.LENGTH_SHORT).show();
                             }
                         }
                     });
 
         } catch (Exception e) {
-            //Log.w(TAG, "signInResult:failed code=" + e.toString());
             Toast.makeText(MainActivity.this, "signInResult:failed code=" + e.toString() , Toast.LENGTH_SHORT).show();
         }
     }
 
-    private void loginStitchClient(GoogleCredential googleCredential){
-        //Log.d("SUC", "entered function");
+    private void requestPermission1(){
+        ActivityCompat.requestPermissions(this,new String[]{Manifest.permission.ACCESS_FINE_LOCATION},2);
+
+    }
+
+    private void requestPermission2(){
+        ActivityCompat.requestPermissions(this,new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},1);
 
     }
 }
