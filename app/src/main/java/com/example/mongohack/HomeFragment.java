@@ -178,6 +178,7 @@ public class HomeFragment extends Fragment {
         super.onResume();
 
         getTopics();
+        getGeoTopics();
     }
 
     public void getTopics() {
@@ -201,9 +202,26 @@ public class HomeFragment extends Fragment {
 
                         }
                         topics.sync().syncMany(syncids.toArray(new BsonObjectId[0]));
-                        getGeoTopics();
+
                     } else
                         Log.e("IDSS", task.getException().toString());
+
+                    Set<BsonObjectId> t = topics.sync().getSyncedIds();
+
+                    ArrayList<BsonValue> desyncs = new ArrayList<>();
+
+                    for(BsonObjectId b : t)
+                    {
+                        if(!syncids.contains(b))
+                            desyncs.add(b);
+                    }
+
+                    Log.d("DESYNC", syncids.toString());
+                    Log.d("DESYNCED", desyncs.toString());
+                    topics.sync().desyncMany(desyncs.toArray(new BsonObjectId[0]));
+
+                    getGeoTopics();
+
                 }
             });
 
@@ -212,7 +230,7 @@ public class HomeFragment extends Fragment {
     private void getGeoTopics() {
 
         SyncFindIterable b;
-        if(syncids.size() != 0)
+        if(false)
         {
             Document d = new Document("_id", new Document(
                     "$in", syncids
@@ -268,6 +286,8 @@ public class HomeFragment extends Fragment {
                 startActivity(intent);
             }
         });
+
+//        getTopics();
     }
     private void requestPermission(){
         ActivityCompat.requestPermissions(getActivity(),new String[]{Manifest.permission.ACCESS_FINE_LOCATION},1);
