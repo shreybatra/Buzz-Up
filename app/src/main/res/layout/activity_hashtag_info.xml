@@ -1,0 +1,169 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".HashtagInfoActivity">
+
+    <LinearLayout
+        android:background="@color/hashTagInfoBackground"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <android.support.v7.widget.Toolbar
+            android:id = "@+id/my_awesome_toolbar"
+            android:layout_width = "match_parent"
+            android:layout_height = "250dp"
+            android:background = "@color/colorPrimary"
+            android:minHeight = "?attr/actionBarSize" >
+
+            <TextView
+                android:text="kl"
+                android:textColor="#FFF"
+                android:textSize="32dp"
+                android:textStyle="bold"
+                android:id = "@+id/toolbarTitle"
+                style = "@style/TextAppearance.Widget.AppCompat.Toolbar.Title"
+                android:background = "?attr/selectableItemBackground"
+                android:layout_width = "wrap_content"
+                android:layout_height = "match_parent"
+                android:gravity="bottom"
+                android:layout_marginBottom="16dp"
+                />
+        </android.support.v7.widget.Toolbar>
+
+        <LinearLayout
+            android:layout_marginTop="16dp"
+            android:layout_marginBottom="16dp"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:orientation="vertical"
+            android:background="@drawable/shadowhashtaginfo"
+            >
+
+            <!--<TextView-->
+            <!--android:id="@+id/topicNameId"-->
+            <!--android:layout_width="wrap_content"-->
+            <!--android:layout_height="wrap_content" />-->
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1"
+                android:orientation="horizontal"
+                android:background="@drawable/shadowhashtaginfo" >
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    android:layout_height="wrap_content"
+                    android:text="Created By"
+                    android:gravity="center_vertical"
+                    android:paddingLeft="8dp"
+                    android:textColor="#000"
+                    android:textSize="20dp"
+                    />
+
+                <TextView
+                    android:id="@+id/createdById"
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    android:layout_height="match_parent"
+                    android:background="@color/colorPrimary"
+                    android:textColor="#FFF"
+                    android:gravity="center_vertical"
+                    android:paddingLeft="8dp"
+                    android:layout_marginBottom="1dp"
+                    />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1"
+                android:orientation="horizontal"
+                android:background="@drawable/shadowhashtaginfo"
+                >
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    android:layout_height="wrap_content"
+                    android:text="Created On"
+                    android:gravity="center_vertical"
+                    android:paddingLeft="8dp"
+                    android:textColor="#000"
+                    android:textSize="20dp"
+                    />
+
+                <TextView
+                    android:id="@+id/createdOnId"
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    android:layout_height="match_parent"
+                    android:background="@color/colorPrimary"
+                    android:gravity="center_vertical"
+                    android:paddingLeft="8dp"
+                    android:textColor="#FFF"
+                    android:textSize="20dp"
+                    android:layout_marginBottom="1dp"
+                    />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    android:layout_height="wrap_content"
+                    android:text="Topic Active Till"
+                    android:gravity="center_vertical"
+                    android:paddingLeft="8dp"
+                    android:textColor="#000"
+                    android:textSize="20dp"
+                    />
+
+                <TextView
+                    android:id="@+id/topicActiveTillId"
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    android:layout_height="match_parent"
+                    android:background="@color/colorPrimary"
+                    android:gravity="center_vertical"
+                    android:paddingLeft="8dp"
+                    android:textColor="#FFF"
+                    android:textSize="20dp"
+                    android:layout_marginBottom="1dp"
+                    />
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="2"
+            android:background="@drawable/shadowhashtaginfo"
+            android:layout_marginBottom="32dp"
+            >
+
+            <TextView
+                android:id="@+id/locationId"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+</android.support.constraint.ConstraintLayout>

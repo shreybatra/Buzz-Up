@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.Location;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
@@ -177,6 +178,16 @@ public class HomeFragment extends Fragment {
     public void onResume() {
         super.onResume();
 
+//        final Handler handler = new Handler();
+//        handler.postDelayed( new Runnable() {
+//
+//            @Override
+//            public void run() {
+//                getTopics();
+//                handler.postDelayed( this, 10000 );
+//            }
+//        }, 10000 );
+
         getTopics();
     }
 
@@ -185,7 +196,7 @@ public class HomeFragment extends Fragment {
         Document filter = new Document()
                 .append("lat", lat)
                 .append("lng", lng)
-                .append("radius", 1);
+                .append("radius", 2);
         syncids.clear();
 
         client.callFunction("getTopicIds", asList(filter.toJson()), ArrayList.class)
@@ -260,8 +271,6 @@ public class HomeFragment extends Fragment {
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
-                //String value=adapter.getItem(position);
-                //Toast.makeText(getActivity(),value,Toast.LENGTH_SHORT).show();
 
                 Intent intent=new Intent(getActivity(),HashtagActivity.class);
                 intent.putExtra("hashtagId",hashIds.get(position).toString());
@@ -269,7 +278,9 @@ public class HomeFragment extends Fragment {
             }
         });
     }
+
     private void requestPermission(){
         ActivityCompat.requestPermissions(getActivity(),new String[]{Manifest.permission.ACCESS_FINE_LOCATION},1);
     }
+
 }

@@ -7,29 +7,25 @@
     tools:context=".HashtagActivity">
 
     <LinearLayout
-        android:orientation="vertical"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:orientation="vertical">
 
-        <TextView
-            android:id="@+id/topicNameId"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
-
-        <TextView
-            android:id="@+id/createdOnId"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
-
-        <TextView
-            android:id="@+id/createdById"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
-
-        <TextView
-            android:id="@+id/topicActiveTillId"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
+        <android.support.v7.widget.Toolbar
+            android:id = "@+id/my_awesome_toolbar"
+            android:layout_width = "match_parent"
+            android:layout_height = "wrap_content"
+            android:background = "@color/colorPrimary"
+            android:minHeight = "?attr/actionBarSize" >
+            <TextView
+                android:textColor="#FFF"
+                android:id = "@+id/toolbarTitle"
+                style = "@style/TextAppearance.Widget.AppCompat.Toolbar.Title"
+                android:background = "?attr/selectableItemBackground"
+                android:layout_width = "wrap_content"
+                android:gravity = "center_vertical"
+                android:layout_height = "match_parent" />
+        </android.support.v7.widget.Toolbar>
 
     </LinearLayout>
 
