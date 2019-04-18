@@ -184,9 +184,10 @@ public class HomeFragment extends Fragment {
 //            @Override
 //            public void run() {
 //                getTopics();
-//                handler.postDelayed( this, 10000 );
+//                getGeoTopics();
+//                handler.postDelayed( this, 5000 );
 //            }
-//        }, 10000 );
+//        }, 5000 );
 
         getTopics();
         getGeoTopics();
@@ -254,7 +255,6 @@ public class HomeFragment extends Fragment {
             b = topics.sync().find();
         }
 
-
         final ArrayList<Document> docs = new ArrayList<>();
         b.into(docs).addOnCompleteListener(new OnCompleteListener() {
             @Override
@@ -282,7 +282,7 @@ public class HomeFragment extends Fragment {
 
     private void setView()
     {
-        adapter = new ArrayAdapter<String>(getActivity(),
+        adapter = new ArrayAdapter<String>(getContext(),
                 android.R.layout.simple_list_item_1, android.R.id.text1, hashtags);
         listView.setAdapter(adapter);
 

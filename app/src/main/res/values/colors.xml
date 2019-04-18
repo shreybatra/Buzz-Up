@@ -3,7 +3,7 @@
     <color name="colorPrimary">#3160EC</color>
     <color name="colorPrimaryDark">#002685</color>
     <color name="colorAccent">#D81B60</color>
-    <color name="hashTagInfoBackground">#83CFDEE9</color>
+    <color name="colorActivityBackground">#61CFDAE2</color>
     <!--<color name="colorAccent">#D81B60</color>-->
 </resources>
 

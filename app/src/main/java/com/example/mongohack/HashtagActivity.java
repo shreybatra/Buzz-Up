@@ -6,6 +6,8 @@ import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
+import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -18,7 +20,7 @@ import org.bson.types.ObjectId;
 
 public class HashtagActivity extends AppCompatActivity {
 
-    TextView topicNameTextView, createdOnTextView, createdByTextView, topicActiveTillTextView;
+    ImageButton backButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -27,7 +29,8 @@ public class HashtagActivity extends AppCompatActivity {
 
         getSupportActionBar().hide();
 
-        TextView toolbarTitle = (TextView) findViewById(R.id.toolbarTitle);
+        TextView toolbarTitle = findViewById(R.id.toolbarTitle);
+        backButton = findViewById(R.id.back_button);
 
         String hashtagIdString = getIntent().getStringExtra("hashtagId");
 
@@ -54,6 +57,15 @@ public class HashtagActivity extends AppCompatActivity {
                 Intent intent=new Intent(HashtagActivity.this, HashtagInfoActivity.class);
                 intent.putExtra("hashtagId",hashtagIdString);
                 startActivity(intent);
+            }
+        });
+
+        backButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent=new Intent(HashtagActivity.this, UserActivity.class);
+                startActivity(intent);
+                finish();
             }
         });
 

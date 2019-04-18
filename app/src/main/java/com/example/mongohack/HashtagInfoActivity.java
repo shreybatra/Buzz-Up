@@ -1,11 +1,15 @@
 package com.example.mongohack;
 
+import android.content.Intent;
+import android.net.Uri;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.format.DateFormat;
 import android.util.Log;
 import android.view.View;
+import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -16,11 +20,16 @@ import com.mongodb.stitch.android.services.mongodb.remote.RemoteMongoCollection;
 import org.bson.Document;
 import org.bson.types.ObjectId;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.Locale;
 
 public class HashtagInfoActivity extends AppCompatActivity {
 
-    TextView topicNameTextView, createdOnTextView, createdByTextView, topicActiveTillTextView;
+    private TextView topicNameTextView, createdOnTextView, createdByTextView, topicActiveTillTextView;
+    Button locationButton;
+    private Double lng, lat;
+    ImageButton backButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -29,7 +38,8 @@ public class HashtagInfoActivity extends AppCompatActivity {
 
         getSupportActionBar().hide();
 
-        TextView toolbarTitle = (TextView) findViewById(R.id.toolbarTitle);
+        TextView toolbarTitle = findViewById(R.id.toolbarTitle);
+        backButton = findViewById(R.id.back_button);
 
         String hashtagIdString = getIntent().getStringExtra("hashtagId");
 
@@ -37,6 +47,7 @@ public class HashtagInfoActivity extends AppCompatActivity {
         createdByTextView = findViewById(R.id.createdById);
         createdOnTextView = findViewById(R.id.createdOnId);
         topicActiveTillTextView = findViewById(R.id.topicActiveTillId);
+        locationButton = findViewById(R.id.locationButton);
 
         RemoteMongoCollection topics = HomeFragment.topics;
         Document top = new Document("_id",new ObjectId(hashtagIdString));
@@ -55,10 +66,39 @@ public class HashtagInfoActivity extends AppCompatActivity {
 
                     Date dateTill = d.getDate("active_till_date");
                     topicActiveTillTextView.setText( DateFormat.format("dd",   dateTill).toString() + " " + DateFormat.format("MMM",   dateTill).toString() + ", " + DateFormat.format("yyyy",   dateTill).toString() );
+
+                    Document locationDocument = (Document)d.get("location");
+                    ArrayList<Double> coord = (ArrayList<Double>)locationDocument.get("coordinates");
+                    lng = coord.get(0);
+                    lat = coord.get(1);
                 }
                 else{
                     Log.d("INFO","not open");
                 }
+            }
+        });
+
+        locationButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                //String uriStr = String.format(Locale.ENGLISH, "geo:%f,%f", 28.4089, 77.3178);
+                //String uriStr = "http://maps.google.com/maps?saddr=20.344,34.34&daddr=20.5666,45.345";
+                //String uriStr = "geo:" + lat.toString() + "," + lng.toString();
+                String uriStr = "http://maps.google.com/maps?daddr=" + lat.toString() + "," + lng.toString();
+                Intent mapIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(uriStr));
+                if (mapIntent.resolveActivity(getPackageManager()) != null) {
+                    startActivity(mapIntent);
+                }
+            }
+        });
+
+        backButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent=new Intent(HashtagInfoActivity.this, HashtagActivity.class);
+                intent.putExtra("hashtagId",hashtagIdString);
+                startActivity(intent);
+                finish();
             }
         });
 

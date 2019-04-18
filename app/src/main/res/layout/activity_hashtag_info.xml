@@ -7,42 +7,57 @@
     tools:context=".HashtagInfoActivity">
 
     <LinearLayout
-        android:background="@color/hashTagInfoBackground"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="vertical">
+        android:background="@color/colorActivityBackground"
+        android:orientation="vertical"
+        tools:layout_editor_absoluteX="116dp"
+        tools:layout_editor_absoluteY="142dp">
 
         <android.support.v7.widget.Toolbar
-            android:id = "@+id/my_awesome_toolbar"
-            android:layout_width = "match_parent"
-            android:layout_height = "250dp"
-            android:background = "@color/colorPrimary"
-            android:minHeight = "?attr/actionBarSize" >
+            android:id="@+id/my_awesome_toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="250dp"
+            android:background="@color/colorPrimary"
+            android:minHeight="?attr/actionBarSize">
 
-            <TextView
-                android:text="kl"
-                android:textColor="#FFF"
-                android:textSize="32dp"
-                android:textStyle="bold"
-                android:id = "@+id/toolbarTitle"
-                style = "@style/TextAppearance.Widget.AppCompat.Toolbar.Title"
-                android:background = "?attr/selectableItemBackground"
-                android:layout_width = "wrap_content"
-                android:layout_height = "match_parent"
-                android:gravity="bottom"
-                android:layout_marginBottom="16dp"
-                />
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent" >
+
+                <ImageButton
+                    android:id="@+id/back_button"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="@color/colorPrimary"
+                    android:src="@drawable/icon_arrow_left"
+                    android:foreground="?attr/selectableItemBackground"
+                    android:paddingTop="16dp"
+                    />
+
+                <TextView
+                    android:id="@+id/toolbarTitle"
+                    style="@style/TextAppearance.Widget.AppCompat.Toolbar.Title"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_marginBottom="16dp"
+                    android:foreground="?attr/selectableItemBackground"
+                    android:gravity="bottom"
+                    android:textColor="#FFF"
+                    android:textSize="32sp"
+                    android:textStyle="bold" />
+
+            </RelativeLayout>
         </android.support.v7.widget.Toolbar>
 
         <LinearLayout
-            android:layout_marginTop="16dp"
-            android:layout_marginBottom="16dp"
             android:layout_width="match_parent"
             android:layout_height="0dp"
+            android:layout_marginTop="16dp"
+            android:layout_marginBottom="16dp"
             android:layout_weight="1"
-            android:orientation="vertical"
             android:background="@drawable/shadowhashtaginfo"
-            >
+            android:orientation="vertical">
 
             <!--<TextView-->
             <!--android:id="@+id/topicNameId"-->
@@ -53,31 +68,29 @@
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
                 android:layout_weight="1"
-                android:orientation="horizontal"
-                android:background="@drawable/shadowhashtaginfo" >
+                android:background="@drawable/shadowhashtaginfo"
+                android:orientation="horizontal">
 
                 <TextView
                     android:layout_width="0dp"
-                    android:layout_weight="1"
                     android:layout_height="wrap_content"
-                    android:text="Created By"
+                    android:layout_weight="1"
                     android:gravity="center_vertical"
                     android:paddingLeft="8dp"
+                    android:text="Created By"
                     android:textColor="#000"
-                    android:textSize="20dp"
-                    />
+                    android:textSize="20dp" />
 
                 <TextView
                     android:id="@+id/createdById"
                     android:layout_width="0dp"
-                    android:layout_weight="1"
                     android:layout_height="match_parent"
+                    android:layout_marginBottom="1dp"
+                    android:layout_weight="1"
                     android:background="@color/colorPrimary"
-                    android:textColor="#FFF"
                     android:gravity="center_vertical"
                     android:paddingLeft="8dp"
-                    android:layout_marginBottom="1dp"
-                    />
+                    android:textColor="#FFF" />
 
             </LinearLayout>
 
@@ -85,33 +98,30 @@
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
                 android:layout_weight="1"
-                android:orientation="horizontal"
                 android:background="@drawable/shadowhashtaginfo"
-                >
+                android:orientation="horizontal">
 
                 <TextView
                     android:layout_width="0dp"
-                    android:layout_weight="1"
                     android:layout_height="wrap_content"
-                    android:text="Created On"
+                    android:layout_weight="1"
                     android:gravity="center_vertical"
                     android:paddingLeft="8dp"
+                    android:text="Created On"
                     android:textColor="#000"
-                    android:textSize="20dp"
-                    />
+                    android:textSize="20dp" />
 
                 <TextView
                     android:id="@+id/createdOnId"
                     android:layout_width="0dp"
-                    android:layout_weight="1"
                     android:layout_height="match_parent"
+                    android:layout_marginBottom="1dp"
+                    android:layout_weight="1"
                     android:background="@color/colorPrimary"
                     android:gravity="center_vertical"
                     android:paddingLeft="8dp"
                     android:textColor="#FFF"
-                    android:textSize="20dp"
-                    android:layout_marginBottom="1dp"
-                    />
+                    android:textSize="20dp" />
 
             </LinearLayout>
 
@@ -123,27 +133,25 @@
 
                 <TextView
                     android:layout_width="0dp"
-                    android:layout_weight="1"
                     android:layout_height="wrap_content"
-                    android:text="Topic Active Till"
+                    android:layout_weight="1"
                     android:gravity="center_vertical"
                     android:paddingLeft="8dp"
+                    android:text="Topic Active Till"
                     android:textColor="#000"
-                    android:textSize="20dp"
-                    />
+                    android:textSize="20dp" />
 
                 <TextView
                     android:id="@+id/topicActiveTillId"
                     android:layout_width="0dp"
-                    android:layout_weight="1"
                     android:layout_height="match_parent"
+                    android:layout_marginBottom="1dp"
+                    android:layout_weight="1"
                     android:background="@color/colorPrimary"
                     android:gravity="center_vertical"
                     android:paddingLeft="8dp"
                     android:textColor="#FFF"
-                    android:textSize="20dp"
-                    android:layout_marginBottom="1dp"
-                    />
+                    android:textSize="20dp" />
 
             </LinearLayout>
 
@@ -152,15 +160,17 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:layout_weight="2"
-            android:background="@drawable/shadowhashtaginfo"
             android:layout_marginBottom="32dp"
-            >
+            android:layout_weight="2">
 
-            <TextView
-                android:id="@+id/locationId"
+            <Button
+                android:id="@+id/locationButton"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content" />
+                android:layout_height="wrap_content"
+                android:background="@color/colorPrimary"
+                android:text="get location"
+                android:textColor="#FFF"
+                android:textStyle="bold" />
 
         </LinearLayout>
 

@@ -56,6 +56,8 @@ public class AddHashtagActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_hashtag);
 
+        setTitle("Add a new HashTag");
+
         hashtagEditText = findViewById(R.id.topicNameEditText);
         dateEditText = findViewById(R.id.dateEditText);
         locationEditText = findViewById(R.id.locationEditText);
@@ -129,7 +131,8 @@ public class AddHashtagActivity extends AppCompatActivity {
                 Document d = new Document()
                         .append("topic_name",newHashtag)
                         .append(
-                                "location",new Document().append(
+                                "location",
+                                new Document().append(
                                         "type","Point"
                                 ).append(
                                 "coordinates",
