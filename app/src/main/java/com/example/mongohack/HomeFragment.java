@@ -113,17 +113,18 @@ public class HomeFragment extends Fragment {
         final RemoteMongoClient rc = client.getServiceClient(RemoteMongoClient.factory,"mongodb-atlas");
         topics = rc.getDatabase("mongohack").getCollection("topics");
 
-        topics.sync().configure(
-                DefaultSyncConflictResolvers.localWins(),
-                new MyUpdateListener(),
-                new MyErrorListener()
-        );
+//        topics.sync().configure(
+//                DefaultSyncConflictResolvers.localWins(),
+//                new MyUpdateListener(),
+//                new MyErrorListener()
+//        );
 
         listView = view.findViewById(R.id.listView);
 
         hashtags = new String[]{"Sync in Progress."};
 
         setView();
+        getTopics();
 
         final Handler handler = new Handler();
         handler.postDelayed( new Runnable() {
@@ -132,10 +133,10 @@ public class HomeFragment extends Fragment {
             public void run() {
                 getTopics();
                 Log.d("CRON","SYNCED");
-                handler.postDelayed( this, 10000 );
+                handler.postDelayed( this, 5000 );
 
             }
-        }, 10000 );
+        }, 5000 );
 
 
         searchEditText = view.findViewById(R.id.searchEditText);
@@ -195,17 +196,6 @@ public class HomeFragment extends Fragment {
         }
     }
 
-    @Override
-    public void onResume() {
-        super.onResume();
-
-
-
-
-
-
-//        getTopics();
-    }
 
     public void getTopics() {
 
@@ -213,7 +203,7 @@ public class HomeFragment extends Fragment {
                 .append("lat", lat)
                 .append("lng", lng)
                 .append("radius", 2);
-        syncids.clear();
+//        syncids.clear();
 
         client.callFunction("getTopicIds", asList(filter.toJson()), ArrayList.class)
             .addOnCompleteListener(new OnCompleteListener<ArrayList>() {
@@ -222,31 +212,42 @@ public class HomeFragment extends Fragment {
                     if (task.isSuccessful()) {
                         List<Document> items = task.getResult();
 
-                        for (Document doc : items) {
-
-                            syncids.add(new BsonObjectId(doc.getObjectId("_id")));
-
+                        hashtagsList.clear();
+                        hashIds.clear();
+                        for(Document d : items)
+                        {
+                            hashtagsList.add("#" + d.getString("topic_name"));
+                            hashIds.add(d.getObjectId("_id"));
                         }
-                        topics.sync().syncMany(syncids.toArray(new BsonObjectId[0]));
+                        Log.d("DONE", String.valueOf(items.size()));
+                        hashtags = hashtagsList.toArray(new String[0]);
+                        setView();
+//
+//                        for (Document doc : items) {
+//
+//                            syncids.add(new BsonObjectId(doc.getObjectId("_id")));
+//
+//                        }
+//                        topics.sync().syncMany(syncids.toArray(new BsonObjectId[0]));
 
                     } else
                         Log.e("IDSS", task.getException().toString());
 
-                    Set<BsonObjectId> t = topics.sync().getSyncedIds();
-
-                    ArrayList<BsonValue> desyncs = new ArrayList<>();
-
-                    for(BsonObjectId b : t)
-                    {
-                        if(!syncids.contains(b))
-                            desyncs.add(b);
-                    }
-
-                    Log.d("DESYNC", syncids.toString());
-                    Log.d("DESYNCED", desyncs.toString());
-                    topics.sync().desyncMany(desyncs.toArray(new BsonObjectId[0]));
-
-                    getGeoTopics();
+//                    Set<BsonObjectId> t = topics.sync().getSyncedIds();
+//
+//                    ArrayList<BsonValue> desyncs = new ArrayList<>();
+//
+//                    for(BsonObjectId b : t)
+//                    {
+//                        if(!syncids.contains(b))
+//                            desyncs.add(b);
+//                    }
+//
+//                    Log.d("DESYNC", syncids.toString());
+//                    Log.d("DESYNCED", desyncs.toString());
+//                    topics.sync().desyncMany(desyncs.toArray(new BsonObjectId[0]));
+//
+//                    getGeoTopics();
 
                 }
             });
