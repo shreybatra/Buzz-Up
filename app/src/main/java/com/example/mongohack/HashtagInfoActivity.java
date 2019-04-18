@@ -15,8 +15,13 @@ import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.mongodb.stitch.android.core.Stitch;
+import com.mongodb.stitch.android.core.StitchAppClient;
+import com.mongodb.stitch.android.services.mongodb.remote.RemoteFindIterable;
+import com.mongodb.stitch.android.services.mongodb.remote.RemoteMongoClient;
 import com.mongodb.stitch.android.services.mongodb.remote.RemoteMongoCollection;
 
+import org.bson.BsonObjectId;
 import org.bson.Document;
 import org.bson.types.ObjectId;
 
@@ -31,10 +36,19 @@ public class HashtagInfoActivity extends AppCompatActivity {
     private Double lng, lat;
     ImageButton backButton;
 
+    StitchAppClient client;
+    RemoteMongoCollection users;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_hashtag_info);
+
+        client = Stitch.getDefaultAppClient();
+
+        final RemoteMongoClient rc = client.getServiceClient(RemoteMongoClient.factory, "mongodb-atlas");
+        users = rc.getDatabase("MyApplication").getCollection("users");
+
 
         getSupportActionBar().hide();
 
@@ -42,6 +56,8 @@ public class HashtagInfoActivity extends AppCompatActivity {
         backButton = findViewById(R.id.back_button);
 
         String hashtagIdString = getIntent().getStringExtra("hashtagId");
+
+
 
         //topicNameTextView = findViewById(R.id.topicNameId);
         createdByTextView = findViewById(R.id.createdById);
@@ -51,6 +67,25 @@ public class HashtagInfoActivity extends AppCompatActivity {
 
         RemoteMongoCollection topics = HomeFragment.topics;
         Document top = new Document("_id",new ObjectId(hashtagIdString));
+
+//        final Task<Document> t = users.find(new Document("_id",new ObjectId(hashtagIdString))).first();
+//        t.addOnCompleteListener(new OnCompleteListener<Document>() {
+//            @Override
+//            public void onComplete(@NonNull Task<Document> task) {
+//                if(task.isSuccessful())
+//                {
+//
+//                    Document d = task.getResult();
+//                    Log.d("USER", d.toString());
+//                    createdByTextView.setText(d.getString("name"));
+//                }
+//                else
+//                {
+//                    Log.d("USER", task.getException().toString());
+//                }
+//            }
+//        });
+
 
         final Task<Document> task = topics.sync().find(top).first();
         task.addOnCompleteListener(new OnCompleteListener<Document>() {
