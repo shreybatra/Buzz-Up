@@ -121,9 +121,21 @@ public class HomeFragment extends Fragment {
 
         listView = view.findViewById(R.id.listView);
 
-        hashtags = new String[]{"Loading topics....!"};
+        hashtags = new String[]{"Sync in Progress."};
 
         setView();
+
+        final Handler handler = new Handler();
+        handler.postDelayed( new Runnable() {
+
+            @Override
+            public void run() {
+                getTopics();
+                Log.d("CRON","SYNCED");
+                handler.postDelayed( this, 10000 );
+
+            }
+        }, 10000 );
 
 
         searchEditText = view.findViewById(R.id.searchEditText);
@@ -164,11 +176,20 @@ public class HomeFragment extends Fragment {
         @Override
         public void onEvent(final BsonValue documentId, final ChangeEvent<Document> event) {
             if (!event.hasUncommittedWrites()) {
-                Log.d("SYNC", documentId.toString() + " synced from local");
+                Log.d("UPDATE", documentId.toString() + " synced from local");
+//                topics.sync().syncOne(documentId);
+//                final Handler handler = new Handler();
+//                handler.postDelayed( new Runnable() {
+//
+//                    @Override
+//                    public void run() {
+//                        getTopics();
+//                    }
+//                }, 1000 );
             }
             else
             {
-                Log.d("SYNC", documentId.toString() + " synced from atlas");
+                Log.d("UPDATE", documentId.toString() + " synced from atlas");
             }
             // refresh the app view, etc.
         }
@@ -178,19 +199,12 @@ public class HomeFragment extends Fragment {
     public void onResume() {
         super.onResume();
 
-//        final Handler handler = new Handler();
-//        handler.postDelayed( new Runnable() {
-//
-//            @Override
-//            public void run() {
-//                getTopics();
-//                getGeoTopics();
-//                handler.postDelayed( this, 5000 );
-//            }
-//        }, 5000 );
 
-        getTopics();
-        getGeoTopics();
+
+
+
+
+//        getTopics();
     }
 
     public void getTopics() {
@@ -273,7 +287,7 @@ public class HomeFragment extends Fragment {
                 if(hashtags.length > 0)
                     hashtags = hashtagsList.toArray(new String[0]);
                 else
-                    hashtags = new String[]{"No topics Found."};
+                    hashtags = new String[]{"Sync in Progress."};
                 setView();
             }
         });

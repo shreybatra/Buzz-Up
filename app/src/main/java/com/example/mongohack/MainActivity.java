@@ -2,6 +2,7 @@ package com.example.mongohack;
 
 import android.Manifest;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
@@ -32,6 +33,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     SignInButton signInButton;
     public static StitchAppClient client=null;
 
+    SharedPreferences pref;
+
 
     public MainActivity() {
     }
@@ -45,10 +48,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         requestPermission2();
 
 
+        client = Stitch.initializeDefaultAppClient(getResources().getString(R.string.initialiseClient));
+
         signInButton = findViewById(R.id.button1);
         signInButton.setOnClickListener(this);
-
-        client = Stitch.initializeDefaultAppClient(getResources().getString(R.string.initialiseClient));
 
 
     }
