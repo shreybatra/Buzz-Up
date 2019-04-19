@@ -150,7 +150,7 @@ public class HashtagActivity extends AppCompatActivity {
                         public void onComplete(@NonNull Task task) {
                             if(task.isSuccessful())
                             {
-                                getData();
+//                                getData();
                                 edittext_chatbox.setText("");
 //                                dataList.add(d);
 //                                adapter.notifyDataSetChanged();
@@ -183,10 +183,10 @@ public class HashtagActivity extends AppCompatActivity {
             public void run() {
                 getData();
                 Log.d("CRON","SYNCED");
-                handler.postDelayed( this, 3000 );
+                handler.postDelayed( this, 5000 );
 
             }
-        }, 3000 );
+        }, 5000 );
     }
 
 
@@ -198,10 +198,11 @@ public class HashtagActivity extends AppCompatActivity {
         Document filter = new Document()
                 .append("topic_id", topicId)
                 .append("created_at", new Document()
-                        .append("$gte", lastUpdated)
+                        .append("$gt", lastUpdated)
                 );
         Log.d("DOCFIND", filter.toString());
-        Date newDate = new Date();
+//        Date newDate = new Date();
+//        lastUpdated = newDate;
 
         RemoteFindIterable t = topic_chat.find(filter);
         t.into(list).addOnCompleteListener(new OnCompleteListener() {
@@ -214,17 +215,14 @@ public class HashtagActivity extends AppCompatActivity {
                             for(Document d : list)
                             {
                                 dataList.add(d);
+                                lastUpdated = d.getDate("created_at");
+                                Log.d("LASTUPDATE", lastUpdated.toString());
                             }
 
-//                            Log.d("FIND", dataList.get(0).toString());
-                            if(list.size()==0) {
-//                                Toast.makeText(getApplicationContext(), "Starting of chat", Toast.LENGTH_SHORT).show();
-                            }
-                            else {
-                                lastUpdated = newDate;
-                                adapter.notifyDataSetChanged();
 
-                            }
+                            adapter.notifyDataSetChanged();
+
+
                         }
                         else
                         {
