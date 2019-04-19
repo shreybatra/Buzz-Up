@@ -234,7 +234,7 @@ public class HomeFragment extends Fragment {
                         if(hashtags.length > 0)
                             hashtags = hashtagsList.toArray(new String[0]);
                         else
-                            hashtags = new String[]{"Sync in Progress."};
+                            hashtags = new String[]{"No topics found."};
                         setView();
 //
 //                        for (Document doc : items) {
