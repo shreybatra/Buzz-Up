@@ -37,7 +37,7 @@ public class HashtagActivity extends AppCompatActivity {
         RemoteMongoCollection topics = HomeFragment.topics;
         Document top = new Document("_id",new ObjectId(hashtagIdString));
 
-        final Task<Document> task = topics.sync().find(top).first();
+        final Task<Document> task = topics.find(top).first();
         task.addOnCompleteListener(new OnCompleteListener<Document>() {
             @Override
             public void onComplete(@NonNull Task<Document> task) {

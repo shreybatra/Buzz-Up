@@ -95,6 +95,8 @@ public class HomeFragment extends Fragment {
             Log.d("SUC", "Login done.");
             return;
         }
+
+        Toast.makeText(getContext(), "Getting Location" , Toast.LENGTH_SHORT).show();
         fusedLocationClient.getLastLocation()
                 .addOnSuccessListener(new OnSuccessListener<Location>() {
                     @Override
@@ -104,6 +106,9 @@ public class HomeFragment extends Fragment {
                             lat =location.getLatitude();
                             lng =location.getLongitude();
 //                            locationEditText.setText(location.toString());
+                            Toast.makeText(getContext(), "SYNCING" , Toast.LENGTH_SHORT).show();
+                            getTopics();
+                            runLoop();
                         }
                     }
                 });
@@ -123,9 +128,34 @@ public class HomeFragment extends Fragment {
 
         hashtags = new String[]{"Sync in Progress."};
 
-        setView();
-        getTopics();
+//        setView();
+//        Toast.makeText(HomeFragment.this,  , Toast.LENGTH_SHORT).show();
 
+
+
+
+
+//        searchEditText = view.findViewById(R.id.searchEditText);
+//        searchEditText.addTextChangedListener(new TextWatcher() {
+//            @Override
+//            public void beforeTextChanged(CharSequence arg0, int arg1, int arg2, int arg3) {
+//
+//            }
+//
+//            @Override
+//            public void onTextChanged(CharSequence cs, int arg1, int arg2, int arg3) {
+//                HomeFragment.this.adapter.getFilter().filter(cs);
+//            }
+//
+//            @Override
+//            public void afterTextChanged(Editable arg0) {
+//
+//            }
+//        });
+
+    }
+
+    private void runLoop() {
         final Handler handler = new Handler();
         handler.postDelayed( new Runnable() {
 
@@ -137,26 +167,6 @@ public class HomeFragment extends Fragment {
 
             }
         }, 5000 );
-
-
-        searchEditText = view.findViewById(R.id.searchEditText);
-        searchEditText.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence arg0, int arg1, int arg2, int arg3) {
-
-            }
-
-            @Override
-            public void onTextChanged(CharSequence cs, int arg1, int arg2, int arg3) {
-                HomeFragment.this.adapter.getFilter().filter(cs);
-            }
-
-            @Override
-            public void afterTextChanged(Editable arg0) {
-
-            }
-        });
-
     }
 
     private class MyErrorListener implements ErrorListener {
@@ -205,6 +215,7 @@ public class HomeFragment extends Fragment {
                 .append("radius", 2);
 //        syncids.clear();
 
+        Log.d("LATLONG", "" + lat + " " + lng);
         client.callFunction("getTopicIds", asList(filter.toJson()), ArrayList.class)
             .addOnCompleteListener(new OnCompleteListener<ArrayList>() {
                 @Override
@@ -220,7 +231,10 @@ public class HomeFragment extends Fragment {
                             hashIds.add(d.getObjectId("_id"));
                         }
                         Log.d("DONE", String.valueOf(items.size()));
-                        hashtags = hashtagsList.toArray(new String[0]);
+                        if(hashtags.length > 0)
+                            hashtags = hashtagsList.toArray(new String[0]);
+                        else
+                            hashtags = new String[]{"Sync in Progress."};
                         setView();
 //
 //                        for (Document doc : items) {
@@ -305,9 +319,15 @@ public class HomeFragment extends Fragment {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
 
-                Intent intent=new Intent(getActivity(),HashtagActivity.class);
-                intent.putExtra("hashtagId",hashIds.get(position).toString());
-                startActivity(intent);
+                if(hashtags[position].contains("Sync in Progress."))
+                {
+
+                }
+                else if (hashIds.size()>position && hashIds.get(position)!=null){
+                    Intent intent = new Intent(getActivity(), HashtagActivity.class);
+                    intent.putExtra("hashtagId", hashIds.get(position).toString());
+                    startActivity(intent);
+                }
             }
         });
 
