@@ -74,6 +74,8 @@ public class HomeFragment extends Fragment {
     String[] hashtags = new String[]{};
     ArrayList<ObjectId> hashIds = new ArrayList<>();
 
+    public Boolean loop = true;
+
 
 
     @Override
@@ -161,9 +163,11 @@ public class HomeFragment extends Fragment {
 
             @Override
             public void run() {
-                getTopics();
-                Log.d("CRON","SYNCED");
-                handler.postDelayed( this, 5000 );
+                if(loop) {
+                    getTopics();
+                    Log.d("CRON", "SYNCED");
+                    handler.postDelayed(this, 5000);
+                }
 
             }
         }, 5000 );
@@ -311,7 +315,7 @@ public class HomeFragment extends Fragment {
 
     private void setView()
     {
-        adapter = new ArrayAdapter<String>(getContext(),
+        adapter = new ArrayAdapter<String>(getActivity(),
                 android.R.layout.simple_list_item_1, android.R.id.text1, hashtags);
         listView.setAdapter(adapter);
 
@@ -338,4 +342,16 @@ public class HomeFragment extends Fragment {
         ActivityCompat.requestPermissions(getActivity(),new String[]{Manifest.permission.ACCESS_FINE_LOCATION},1);
     }
 
+    @Override
+    public void onPause() {
+        super.onPause();
+
+        loop = false;
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        loop = true;
+    }
 }

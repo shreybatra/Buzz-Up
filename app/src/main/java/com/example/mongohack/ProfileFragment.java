@@ -49,7 +49,7 @@ public class ProfileFragment extends Fragment {
         String lastName = client.getAuth().getUser().getProfile().getLastName();
         String email = client.getAuth().getUser().getProfile().getEmail();
         String photoUrl = client.getAuth().getUser().getProfile().getPictureUrl();
-        String myId = client.getAuth().getUser().getId();
+//        String myId = client.getAuth().getUser().getId();
 
         TextView nameTextView = view.findViewById(R.id.name);
         nameTextView.setText(firstName+" "+lastName);
