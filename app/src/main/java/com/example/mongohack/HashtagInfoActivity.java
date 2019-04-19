@@ -47,7 +47,7 @@ public class HashtagInfoActivity extends AppCompatActivity {
         client = Stitch.getDefaultAppClient();
 
         final RemoteMongoClient rc = client.getServiceClient(RemoteMongoClient.factory, "mongodb-atlas");
-        users = rc.getDatabase("MyApplication").getCollection("users");
+        users = rc.getDatabase("mongohack").getCollection("users");
 
 
         getSupportActionBar().hide();
@@ -66,28 +66,31 @@ public class HashtagInfoActivity extends AppCompatActivity {
         locationButton = findViewById(R.id.locationButton);
 
         RemoteMongoCollection topics = HomeFragment.topics;
-        Document top = new Document("_id",new ObjectId(hashtagIdString));
+        Document top = new Document("_id",new BsonObjectId(new ObjectId(hashtagIdString)));
 
-//        final Task<Document> t = users.find(new Document("_id",new ObjectId(hashtagIdString))).first();
-//        t.addOnCompleteListener(new OnCompleteListener<Document>() {
-//            @Override
-//            public void onComplete(@NonNull Task<Document> task) {
-//                if(task.isSuccessful())
-//                {
-//
-//                    Document d = task.getResult();
+        Log.d("USERDOC", top.toString());
+
+        final Task<Document> t = users.find(new Document("_id",client.getAuth().getUser().getId())).first();
+        t.addOnCompleteListener(new OnCompleteListener<Document>() {
+            @Override
+            public void onComplete(@NonNull Task<Document> task) {
+                if(task.isSuccessful())
+                {
+
+                    Document d = task.getResult();
+                    Document data = (Document) d.get("data");
 //                    Log.d("USER", d.toString());
-//                    createdByTextView.setText(d.getString("name"));
-//                }
-//                else
-//                {
-//                    Log.d("USER", task.getException().toString());
-//                }
-//            }
-//        });
+                    createdByTextView.setText(data.getString("name"));
+                }
+                else
+                {
+                    Log.d("USER", task.getException().toString());
+                }
+            }
+        });
 
 
-        final Task<Document> task = topics.sync().find(top).first();
+        final Task<Document> task = topics.find(top).first();
         task.addOnCompleteListener(new OnCompleteListener<Document>() {
             @Override
             public void onComplete(@NonNull Task<Document> task) {
@@ -95,7 +98,7 @@ public class HashtagInfoActivity extends AppCompatActivity {
                     Document d = task.getResult();
                     toolbarTitle.setText( d.getString("topic_name") );
                     //topicNameTextView.setText( d.getString("topic_name") );
-                    createdByTextView.setText( hashtagIdString );
+//                    createdByTextView.setText( hashtagIdString );
                     Date date = d.getDate("created_at");
                     createdOnTextView.setText( DateFormat.format("dd",   date).toString() + " " + DateFormat.format("MMM",   date).toString() + ", " + DateFormat.format("yyyy",   date).toString() );
 

@@ -28,6 +28,7 @@ import com.mongodb.stitch.android.services.mongodb.remote.RemoteMongoCollection;
 import org.bson.BsonArray;
 import org.bson.BsonDocument;
 import org.bson.Document;
+import org.bson.types.ObjectId;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -141,10 +142,11 @@ public class AddHashtagActivity extends AppCompatActivity {
                         )
                         .append("created_at",new Date())
                         .append("active_till_date",tillDate)
-                        .append("owner_id",client.getAuth().getUser().getId());
+                        .append("owner_id",new ObjectId(client.getAuth().getUser().getId()));
 
 
-                Task findtask = topics.sync().insertOne(d);
+                Log.d("DOC", d.toString());
+                Task findtask = topics.insertOne(d);
 
                 findtask.addOnCompleteListener(new OnCompleteListener() {
                     @Override
@@ -152,7 +154,7 @@ public class AddHashtagActivity extends AppCompatActivity {
                         if(task.isSuccessful())
                         {
                             Log.d("hashtag adding TAG", task.getResult().toString());
-                            Toast.makeText(AddHashtagActivity.this, "hashtag could be added", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(AddHashtagActivity.this, "hashtag added", Toast.LENGTH_SHORT).show();
                             finish();
                         }
                         else{
