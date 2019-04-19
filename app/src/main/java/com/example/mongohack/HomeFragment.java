@@ -11,6 +11,8 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
@@ -53,9 +55,9 @@ import static java.util.Arrays.asList;
 
 public class HomeFragment extends Fragment {
 
-    ListView listView;
+    RecyclerView listView;
     EditText searchEditText;
-    ArrayAdapter<String> adapter;
+    TopicListAdapter adapter;
 
     private StitchAppClient client;
     public static RemoteMongoCollection topics;
@@ -71,7 +73,8 @@ public class HomeFragment extends Fragment {
     public double lng=0.0;
 
 
-    String[] hashtags = new String[]{};
+    List<Document> hashtags = new ArrayList<>();
+//    String[] hashtags = new String[]{};
     ArrayList<ObjectId> hashIds = new ArrayList<>();
 
     public Boolean loop = true;
@@ -126,34 +129,15 @@ public class HomeFragment extends Fragment {
 //                new MyErrorListener()
 //        );
 
-        listView = view.findViewById(R.id.listView);
+//        hashtags = new String[]{"Sync in Progress."};
 
-        hashtags = new String[]{"Sync in Progress."};
+        getTopics();
 
-//        setView();
-//        Toast.makeText(HomeFragment.this,  , Toast.LENGTH_SHORT).show();
+        listView = view.findViewById(R.id.topic_list);
+        adapter = new TopicListAdapter(hashtags, getContext());
+        listView.setAdapter(adapter);
+        listView.setLayoutManager(new LinearLayoutManager(getContext()));
 
-
-
-
-
-//        searchEditText = view.findViewById(R.id.searchEditText);
-//        searchEditText.addTextChangedListener(new TextWatcher() {
-//            @Override
-//            public void beforeTextChanged(CharSequence arg0, int arg1, int arg2, int arg3) {
-//
-//            }
-//
-//            @Override
-//            public void onTextChanged(CharSequence cs, int arg1, int arg2, int arg3) {
-//                HomeFragment.this.adapter.getFilter().filter(cs);
-//            }
-//
-//            @Override
-//            public void afterTextChanged(Editable arg0) {
-//
-//            }
-//        });
 
     }
 
@@ -217,7 +201,6 @@ public class HomeFragment extends Fragment {
                 .append("lat", lat)
                 .append("lng", lng)
                 .append("radius", 2);
-//        syncids.clear();
 
         Log.d("LATLONG", "" + lat + " " + lng);
         client.callFunction("getTopicIds", asList(filter.toJson()), ArrayList.class)
@@ -227,18 +210,22 @@ public class HomeFragment extends Fragment {
                     if (task.isSuccessful()) {
                         List<Document> items = task.getResult();
 
-                        hashtagsList.clear();
-                        hashIds.clear();
-                        for(Document d : items)
-                        {
-                            hashtagsList.add("#" + d.getString("topic_name"));
-                            hashIds.add(d.getObjectId("_id"));
-                        }
-                        Log.d("DONE", String.valueOf(items.size()));
-                        if(hashtags.length > 0)
-                            hashtags = hashtagsList.toArray(new String[0]);
-                        else
-                            hashtags = new String[]{"No topics found."};
+                        Log.d("MSG", items.toArray().toString());
+                        hashtags = items;
+
+
+//                        hashtagsList.clear();
+//                        hashIds.clear();
+//                        for(Document d : items)
+//                        {
+//                            hashtagsList.add("#" + d.getString("topic_name"));
+//                            hashIds.add(d.getObjectId("_id"));
+//                        }
+//                        Log.d("DONE", String.valueOf(items.size()));
+//                        if(hashtags.length > 0)
+//                            hashtags = hashtagsList.toArray(new String[0]);
+//                        else
+//                            hashtags = new String[]{"No topics found."};
                         setView();
 //
 //                        for (Document doc : items) {
@@ -272,68 +259,51 @@ public class HomeFragment extends Fragment {
 
     }
 
-    private void getGeoTopics() {
-
-        SyncFindIterable b;
-        if(false)
-        {
-            Document d = new Document("_id", new Document(
-                    "$in", syncids
-            ));
-            Log.d("DOCC", syncids.toString());
-            b = topics.sync().find(d);
-        }
-        else
-        {
-            b = topics.sync().find();
-        }
-
-        final ArrayList<Document> docs = new ArrayList<>();
-        b.into(docs).addOnCompleteListener(new OnCompleteListener() {
-            @Override
-            public void onComplete(@NonNull Task task) {
-                if(task.isSuccessful())
-                {
-                    hashtagsList.clear();
-                    hashIds.clear();
-                    for(Document d : docs)
-                    {
-                        hashtagsList.add("#" + d.getString("topic_name"));
-                        hashIds.add(d.getObjectId("_id"));
-                    }
-
-                }
-                if(hashtags.length > 0)
-                    hashtags = hashtagsList.toArray(new String[0]);
-                else
-                    hashtags = new String[]{"Sync in Progress."};
-                setView();
-            }
-        });
-
-    }
+//    private void getGeoTopics() {
+//
+//        SyncFindIterable b;
+//        if(false)
+//        {
+//            Document d = new Document("_id", new Document(
+//                    "$in", syncids
+//            ));
+//            Log.d("DOCC", syncids.toString());
+//            b = topics.sync().find(d);
+//        }
+//        else
+//        {
+//            b = topics.sync().find();
+//        }
+//
+//        final ArrayList<Document> docs = new ArrayList<>();
+//        b.into(docs).addOnCompleteListener(new OnCompleteListener() {
+//            @Override
+//            public void onComplete(@NonNull Task task) {
+//                if(task.isSuccessful())
+//                {
+//                    hashtagsList.clear();
+//                    hashIds.clear();
+//                    for(Document d : docs)
+//                    {
+//                        hashtagsList.add("#" + d.getString("topic_name"));
+//                        hashIds.add(d.getObjectId("_id"));
+//                    }
+//
+//                }
+//                if(hashtags.length > 0)
+//                    hashtags = hashtagsList.toArray(new String[0]);
+//                else
+//                    hashtags = new String[]{"Sync in Progress."};
+//                setView();
+//            }
+//        });
+//
+//    }
 
     private void setView()
     {
-        adapter = new ArrayAdapter<String>(getActivity(),
-                android.R.layout.simple_list_item_1, android.R.id.text1, hashtags);
+        adapter = new TopicListAdapter(hashtags, getContext());
         listView.setAdapter(adapter);
-
-        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
-
-                if(hashtags[position].contains("Sync in Progress."))
-                {
-
-                }
-                else if (hashIds.size()>position && hashIds.get(position)!=null){
-                    Intent intent = new Intent(getActivity(), HashtagActivity.class);
-                    intent.putExtra("hashtagId", hashIds.get(position).toString());
-                    startActivity(intent);
-                }
-            }
-        });
 
 //        getTopics();
     }
