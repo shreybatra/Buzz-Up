@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="15dp"
+        android:layout_marginBottom="0dp"
+        android:id="@+id/abovemarge"/>
+
+    <TextView
+        android:id="@+id/topic_number"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/abovemarge"
+        android:gravity="center"
+        android:layout_marginStart="20dp"
+        android:text="#1"
+        android:textSize="25sp" />
+
+    <TextView
+        android:id="@+id/topic_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_below="@+id/abovemarge"
+        android:text="abcd"
+        android:textSize="25sp" />
+
+    <TextView
+        android:id="@+id/hashtag"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_toLeftOf="@+id/topic_name"
+        android:layout_below="@+id/abovemarge"
+        android:text="#"
+        android:textSize="25sp" />
+
+    <TextView
+        android:id="@+id/topic_count"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:layout_marginEnd="20dp"
+        android:gravity="center"
+        android:layout_below="@+id/abovemarge"
+        android:text="123"
+        android:textSize="25sp" />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="15dp"
+        android:layout_marginBottom="0dp"
+        android:layout_below="@+id/topic_name"
+        android:id="@+id/belowmarge"/>
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="2dp"
+        android:layout_marginBottom="0dp"
+        android:background="#dfdfdf"
+        android:layout_below="@+id/belowmarge"/>
+
+
+</RelativeLayout>

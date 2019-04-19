@@ -1,22 +1,32 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
-    tools:context=".HomeFragment">
+    android:background="@color/colorActivityBackground"
+    tools:context=".HashtagActivity">
 
-    <EditText
-        android:id="@+id/searchEditText"
+    <TextView
+        android:id="@+id/toolbarTitle"
+        style="@style/TextAppearance.Widget.AppCompat.Toolbar.Title"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="?attr/selectableItemBackground"
+        android:gravity="center_vertical"
+        android:padding="16dp"
+        android:textColor="#FFF" />
+
+
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/topic_list"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="Search Hashtag"
-        />
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/my_awesome_toolbar"/>
 
-    <ListView
-        android:id="@+id/listView"
-        android:layout_width="match_parent"
-        android:layout_height="fill_parent"
-        />
 
-</LinearLayout>
+
+</android.support.constraint.ConstraintLayout>
