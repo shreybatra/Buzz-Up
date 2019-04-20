@@ -12,6 +12,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -62,7 +63,7 @@ public class HashtagActivity extends AppCompatActivity {
 
         getSupportActionBar().hide();
 
-        TextView toolbarTitle = findViewById(R.id.toolbarTitle);
+        LinearLayout toolbarTitle = findViewById(R.id.toolbar);
         backButton = findViewById(R.id.back_button);
 
         String hashtagIdString = getIntent().getStringExtra("hashtagId");
@@ -77,7 +78,7 @@ public class HashtagActivity extends AppCompatActivity {
             public void onComplete(@NonNull Task<Document> task) {
                 if(task.isSuccessful()){
                     Document d = task.getResult();
-                    toolbarTitle.setText( d.getString("topic_name") );
+                    ((TextView)(toolbarTitle.findViewById(R.id.toolbarTitle))).setText( d.getString("topic_name") );
                 }
                 else{
                     Log.d("INFO","not open");

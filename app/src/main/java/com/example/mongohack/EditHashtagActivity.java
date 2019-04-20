@@ -4,44 +4,42 @@ import android.Manifest;
 import android.app.DatePickerDialog;
 import android.content.pm.PackageManager;
 import android.location.Location;
-import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
+import android.os.Bundle;
+import android.text.format.DateFormat;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
-import com.mongodb.lang.NonNull;
 import com.mongodb.stitch.android.core.Stitch;
 import com.mongodb.stitch.android.core.StitchAppClient;
 import com.mongodb.stitch.android.services.mongodb.remote.RemoteMongoCollection;
 
-import org.bson.BsonArray;
-import org.bson.BsonDocument;
+import org.bson.BsonObjectId;
 import org.bson.Document;
 import org.bson.types.ObjectId;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
 
-public class AddHashtagActivity extends AppCompatActivity {
+public class EditHashtagActivity extends AppCompatActivity {
 
     EditText hashtagEditText;
-    Button submitButton, dateButton, locationButton;
+    Button submitButton, dateTillButton, locationButton;
 
-    TextView dateEditText, locationEditText;
+    TextView dateTillEditText, locationEditText;
     private int mYear, mMonth, mDay;
     private Date tillDate;
     public double lat=0.0;
@@ -55,22 +53,48 @@ public class AddHashtagActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_add_hashtag);
+        setContentView(R.layout.activity_edit_hashtag);
 
-        setTitle("Add a new HashTag");
+        setTitle("Edit Topic Info");
 
         hashtagEditText = findViewById(R.id.topicNameEditText);
-        dateEditText = findViewById(R.id.dateEditText);
+        dateTillEditText = findViewById(R.id.dateEditText);
         locationEditText = findViewById(R.id.locationEditText);
 
-        dateButton = findViewById(R.id.dateButton);
+        dateTillButton = findViewById(R.id.dateButton);
         locationButton = findViewById(R.id.locationButton);
         submitButton = findViewById(R.id.submitButton);
 
         client= Stitch.getDefaultAppClient();
         topics = HomeFragment.topics;
 
-        dateButton.setOnClickListener(new View.OnClickListener() {
+        String hashtagIdString = getIntent().getStringExtra("hashtagId");
+        Document top = new Document("_id",new BsonObjectId(new ObjectId(hashtagIdString)));
+
+        final Task<Document> task = topics.find(top).first();
+        task.addOnCompleteListener(new OnCompleteListener<Document>() {
+            @Override
+            public void onComplete(@NonNull Task<Document> task) {
+                if(task.isSuccessful()){
+                    Document d = task.getResult();
+                    hashtagEditText.setText( d.getString("topic_name") );
+
+                    Date dateTill = d.getDate("active_till_date");
+                    //dateTillEditText.setText( DateFormat.format("dd",   dateTill).toString() + " " + DateFormat.format("MMM",   dateTill).toString() + ", " + DateFormat.format("yyyy",   dateTill).toString() );
+                    dateTillEditText.setText( DateFormat.format("dd MMM, yyyy",   dateTill).toString() );
+                    Document locationDocument = (Document)d.get("location");
+                    ArrayList<Double> coord = (ArrayList<Double>)locationDocument.get("coordinates");
+                    lng = coord.get(0);
+                    lat = coord.get(1);
+                    locationEditText.setText("Lat-" + lat + " Lng-"+lng);
+                }
+                else{
+                    Log.d("INFO","not open");
+                }
+            }
+        });
+
+        dateTillButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 final Calendar c = Calendar.getInstance();
@@ -78,11 +102,11 @@ public class AddHashtagActivity extends AppCompatActivity {
                 mMonth = c.get(Calendar.MONTH);
                 mDay = c.get(Calendar.DAY_OF_MONTH);
 
-                DatePickerDialog datePickerDialog = new DatePickerDialog(AddHashtagActivity.this,
+                DatePickerDialog datePickerDialog = new DatePickerDialog(EditHashtagActivity.this,
                         new DatePickerDialog.OnDateSetListener() {
                             @Override
                             public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
-                                dateEditText.setText(String.valueOf(dayOfMonth) + "-" + String.valueOf(monthOfYear + 1) + "-" + String.valueOf(year));
+                                dateTillEditText.setText(String.valueOf(dayOfMonth) + "-" + String.valueOf(monthOfYear + 1) + "-" + String.valueOf(year));
                                 Calendar c1 = GregorianCalendar.getInstance();
                                 c1.set(year, monthOfYear, dayOfMonth+1);
                                 tillDate = c1.getTime();
@@ -103,12 +127,12 @@ public class AddHashtagActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
 
-                if (ActivityCompat.checkSelfPermission(AddHashtagActivity.this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED )  {
+                if (ActivityCompat.checkSelfPermission(EditHashtagActivity.this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED )  {
                     Log.d("SUC", "Login done.");
                     return;
                 }
                 fusedLocationClient.getLastLocation()
-                        .addOnSuccessListener(AddHashtagActivity.this, new OnSuccessListener<Location>() {
+                        .addOnSuccessListener(EditHashtagActivity.this, new OnSuccessListener<Location>() {
                             @Override
                             public void onSuccess(Location location) {
 
@@ -126,48 +150,12 @@ public class AddHashtagActivity extends AppCompatActivity {
         submitButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String newHashtag = hashtagEditText.getText().toString();
-                Log.d("hashtag name",newHashtag);
 
-                Document d = new Document()
-                        .append("topic_name",newHashtag)
-                        .append(
-                                "location",
-                                new Document().append(
-                                        "type","Point"
-                                ).append(
-                                "coordinates",
-                                        new ArrayList<Double>( Arrays.asList(lng,lat) )
-                                )
-                        )
-                        .append("created_at",new Date())
-                        .append("active_till_date",tillDate)
-                        .append("user_name", client.getAuth().getUser().getProfile().getName())
-                        .append("owner_id",new ObjectId(client.getAuth().getUser().getId()));
-
-                Log.d("DOC", d.toString());
-                Task findtask = topics.insertOne(d);
-
-                findtask.addOnCompleteListener(new OnCompleteListener() {
-                    @Override
-                    public void onComplete(@NonNull Task task) {
-                        if(task.isSuccessful())
-                        {
-                            Log.d("hashtag adding TAG", task.getResult().toString());
-                            Toast.makeText(AddHashtagActivity.this, "hashtag added", Toast.LENGTH_SHORT).show();
-                            finish();
-                        }
-                        else{
-                            Toast.makeText(AddHashtagActivity.this, "hashtag could not be added", Toast.LENGTH_SHORT).show();
-                            finish();
-                        }
-                    }
-                });
             }
         });
-
     }
     private void requestPermission(){
         ActivityCompat.requestPermissions(this,new String[]{Manifest.permission.ACCESS_FINE_LOCATION},1);
     }
+
 }

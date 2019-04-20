@@ -32,12 +32,14 @@ import java.util.Locale;
 public class HashtagInfoActivity extends AppCompatActivity {
 
     private TextView topicNameTextView, createdOnTextView, createdByTextView, topicActiveTillTextView;
-    Button locationButton;
+    Button locationButton, editInfoButton;
     private Double lng, lat;
     ImageButton backButton;
 
     StitchAppClient client;
     RemoteMongoCollection users;
+
+    String currentUserName, topicOwnerName;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -64,30 +66,34 @@ public class HashtagInfoActivity extends AppCompatActivity {
         createdOnTextView = findViewById(R.id.createdOnId);
         topicActiveTillTextView = findViewById(R.id.topicActiveTillId);
         locationButton = findViewById(R.id.locationButton);
+        editInfoButton = findViewById(R.id.editInfoButton);
 
         RemoteMongoCollection topics = HomeFragment.topics;
         Document top = new Document("_id",new BsonObjectId(new ObjectId(hashtagIdString)));
 
         Log.d("USERDOC", top.toString());
 
-        final Task<Document> t = users.find(new Document("_id",client.getAuth().getUser().getId())).first();
-        t.addOnCompleteListener(new OnCompleteListener<Document>() {
-            @Override
-            public void onComplete(@NonNull Task<Document> task) {
-                if(task.isSuccessful())
-                {
-
-                    Document d = task.getResult();
-                    Document data = (Document) d.get("data");
-//                    Log.d("USER", d.toString());
-                    createdByTextView.setText(data.getString("name"));
-                }
-                else
-                {
-                    Log.d("USER", task.getException().toString());
-                }
-            }
-        });
+//        final Task<Document> t = users.find(new Document("_id",client.getAuth().getUser().getId())).first();
+//        t.addOnCompleteListener(new OnCompleteListener<Document>() {
+//            @Override
+//            public void onComplete(@NonNull Task<Document> task) {
+//                if(task.isSuccessful())
+//                {
+//
+//                    Document d = task.getResult();
+//                    Document data = (Document) d.get("data");
+//                    //Log.d("data user",data.getString("name").toString());
+//                    currentUserName = data.getString("name");
+//                    Log.d("currentUserName",currentUserName);
+//
+//                }
+//                else
+//                {
+//                    Log.d("USER", task.getException().toString());
+//                }
+//            }
+//        });
+        currentUserName = client.getAuth().getUser().getProfile().getName();
 
 
         final Task<Document> task = topics.find(top).first();
@@ -97,8 +103,9 @@ public class HashtagInfoActivity extends AppCompatActivity {
                 if(task.isSuccessful()){
                     Document d = task.getResult();
                     toolbarTitle.setText( d.getString("topic_name") );
-                    //topicNameTextView.setText( d.getString("topic_name") );
-//                    createdByTextView.setText( hashtagIdString );
+                    createdByTextView.setText(d.getString("user_name"));
+                    topicOwnerName = d.getString("user_name");
+                    //Log.d("topicOwnerName",topicOwnerName);
                     Date date = d.getDate("created_at");
                     createdOnTextView.setText( DateFormat.format("dd",   date).toString() + " " + DateFormat.format("MMM",   date).toString() + ", " + DateFormat.format("yyyy",   date).toString() );
 
@@ -109,12 +116,17 @@ public class HashtagInfoActivity extends AppCompatActivity {
                     ArrayList<Double> coord = (ArrayList<Double>)locationDocument.get("coordinates");
                     lng = coord.get(0);
                     lat = coord.get(1);
+
+                    if( topicOwnerName.equals( currentUserName ) )
+                        editInfoButton.setVisibility(View.VISIBLE);
+
                 }
                 else{
                     Log.d("INFO","not open");
                 }
             }
         });
+        Log.d("topicOwnerName outside","" + topicOwnerName);
 
         locationButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -139,6 +151,32 @@ public class HashtagInfoActivity extends AppCompatActivity {
                 finish();
             }
         });
+
+
+
+//        if( topicOwnerName.equals( currentUserName ) ) {
+//            editInfoButton.setVisibility(View.VISIBLE);
+            editInfoButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent intent = new Intent(getApplicationContext(),EditHashtagActivity.class);
+                    intent.putExtra("hashtagId",hashtagIdString);
+                    startActivity(intent);
+                    finish();
+                }
+            });
+//            Log.d("button display","yes");
+//        }
+//        else {
+//            Log.d("button display","no");
+//        }
+
+//        if( topicOwnerName.equals( currentUserName ) ) {
+//            Log.d("button display","yes");
+//        }
+//        else {
+//            Log.d("button display","no");
+//        }
 
     }
 }

@@ -3,6 +3,7 @@ package com.example.mongohack;
 import android.content.Context;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
+import android.text.format.DateFormat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,6 +14,7 @@ import org.bson.Document;
 
 import java.lang.annotation.Documented;
 import java.util.Collections;
+import java.util.Date;
 import java.util.List;
 
 public class MessageListAdapter extends RecyclerView.Adapter<MessageViewHolder> {
@@ -46,7 +48,9 @@ public class MessageListAdapter extends RecyclerView.Adapter<MessageViewHolder> 
     public void onBindViewHolder(@NonNull MessageViewHolder viewHolder, int i) {
         viewHolder.user_name.setText(list.get(i).getString("user_name"));
         viewHolder.user_message.setText(list.get(i).getString("message"));
-        viewHolder.message_date.setText(list.get(i).getDate("created_at").toString());
+        Date messageDate =  list.get(i).getDate("created_at");
+        viewHolder.message_time.setText(DateFormat.format("K:mm a", messageDate).toString());
+        viewHolder.message_date.setText(DateFormat.format("dd", messageDate).toString() + " " + DateFormat.format("MMM", messageDate).toString() + ", " + DateFormat.format("yyyy", messageDate).toString());
     }
 
 

@@ -27,21 +27,45 @@
             android:padding="8dp"
             android:src="@drawable/icon_arrow_left" />
 
-        <TextView
-            android:id="@+id/toolbarTitle"
-            style="@style/TextAppearance.Widget.AppCompat.Toolbar.Title"
+        <LinearLayout
+            android:id="@+id/toolbar"
+            android:paddingLeft="8dp"
+            android:orientation="vertical"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:background="?attr/selectableItemBackground"
-            android:gravity="center_vertical"
-            android:padding="16dp"
-            android:textColor="#FFF" />
+            >
+            <TextView
+                android:text="title"
+                android:id="@+id/toolbarTitle"
+                style="@style/TextAppearance.Widget.AppCompat.Toolbar.Title"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="2"
+                android:textColor="#FFF"
+                android:layout_marginBottom="8dp"
+                android:textStyle="bold"
+                />
+
+            <TextView
+                android:text="Tap here for topic info"
+                style="@style/TextAppearance.Widget.AppCompat.Toolbar.Title"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1"
+                android:textSize="8sp"
+                android:textColor="#FFF"
+                android:layout_marginTop="-5dp"
+                />
+        </LinearLayout>
     </android.support.v7.widget.Toolbar>
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/reyclerview_message_list"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_margin="8dp"
+        android:paddingBottom="120dp"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toBottomOf="@id/my_awesome_toolbar"/>

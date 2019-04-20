@@ -12,7 +12,8 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".HashtagInfoActivity"></activity>
+        <activity android:name=".EditHashtagActivity"></activity>
+        <activity android:name=".HashtagInfoActivity" />
         <activity android:name=".HashtagActivity" />
         <activity android:name=".AddHashtagActivity" />
         <activity
