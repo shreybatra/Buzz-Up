@@ -20,7 +20,7 @@
             <item
                 android:id="@+id/nav_team"
                 android:icon="@drawable/icon_team_48"
-                android:title="Team" />
+                android:title="About Us" />
         </menu>
     </item>
 

@@ -59,6 +59,7 @@ public class ProfileFragment extends Fragment {
 
         ImageView profileImageView = view.findViewById(R.id.profileImage);
         Picasso.with(getContext()).load(photoUrl).into(profileImageView);
+        //Log.d("photo",photoUrl+"");
 
         ListView listView = view.findViewById(R.id.listViewId);
         adapter = new ArrayAdapter<String>(getContext(),

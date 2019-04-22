@@ -143,6 +143,7 @@ public class HashtagActivity extends AppCompatActivity {
                     d.append("user_name", client.getAuth().getUser().getProfile().getName());
                     d.append("created_at", new Date());
                     d.append("topic_id", topicId);
+                    d.append("profile_photo_string", client.getAuth().getUser().getProfile().getPictureUrl());
 
 
                     Task t = topic_chat.insertOne(d);

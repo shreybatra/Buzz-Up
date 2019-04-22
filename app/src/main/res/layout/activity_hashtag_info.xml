@@ -90,7 +90,8 @@
                     android:background="@color/colorPrimary"
                     android:gravity="center_vertical"
                     android:paddingLeft="8dp"
-                    android:textColor="#FFF" />
+                    android:textColor="#FFF"
+                    android:textSize="20dp" />
 
             </LinearLayout>
 

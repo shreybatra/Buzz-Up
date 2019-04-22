@@ -1,36 +1,72 @@
 <?xml version="1.0" encoding="utf-8"?>
 <android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
+xmlns:app="http://schemas.android.com/apk/res-auto"
+xmlns:tools="http://schemas.android.com/tools"
+android:layout_width="match_parent"
+android:layout_height="match_parent"
+android:background="@color/colorActivityBackground"
+android:padding="16dp"
+tools:context=".AddHashtagActivity">
+
+<LinearLayout
+    android:orientation="vertical"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:layout_margin="16dp"
-    tools:context=".AddHashtagActivity">
+    android:layout_height="match_parent">
 
     <LinearLayout
+        android:orientation="vertical"
+        android:background="@drawable/shadowhashtaginfo"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical">
+        android:layout_height="wrap_content"
+        android:padding="8dp"
+        android:layout_marginBottom="16dp" >
+
+        <TextView
+            android:id="@+id/topicHeadingTextView"
+            android:text="Add a New Topic"
+            android:textColor="@color/colorPrimary"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
 
         <EditText
             android:id="@+id/topicNameEditText"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="Add a new HashTag"
+            android:hint="Add Topic"
+            />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:orientation="vertical"
+        android:background="@drawable/shadowhashtaginfo"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="8dp"
+        android:layout_marginBottom="16dp" >
+
+        <TextView
+            android:id="@+id/dateHeadingTextView"
+            android:text="Select Date till which topic will be active"
+            android:textColor="@color/colorPrimary"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="8dp"
             />
 
         <LinearLayout
+            android:orientation="horizontal"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal">
+            android:layout_height="wrap_content">
 
             <TextView
-                android:id="@+id/dateEditText"
+                android:id="@+id/dateTextView"
                 android:layout_width="0dp"
                 android:layout_weight="1"
                 android:layout_height="wrap_content"
-                android:text="Select Date"
-                android:textSize="20dp"
+                android:hint="Date"
+                android:textColor="#000"
+                android:textSize="20sp"
                 android:gravity="center_horizontal"/>
 
             <Button
@@ -40,47 +76,86 @@
                 android:layout_height="wrap_content"
                 android:background="@color/colorPrimary"
                 android:textColor="#FFF"
-                android:text="TOPIC ACTIVE TILL" />
+                android:textStyle="bold"
+                android:text="select date" />
 
         </LinearLayout>
 
-        <LinearLayout
+    </LinearLayout>
+
+    <LinearLayout
+        android:orientation="vertical"
+        android:background="@drawable/shadowhashtaginfo"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="8dp"
+        android:layout_marginBottom="16dp" >
+
+        <TextView
+            android:id="@+id/locationHeadingTextView"
+            android:text="Select Location of Topic"
+            android:textColor="@color/colorPrimary"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="8dp" />
+
+        <TextView
+            android:id="@+id/locationTextView"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:layout_marginBottom="16dp"
-            android:layout_marginTop="16dp" >
+            android:textColor="#000"
+            android:textSize="20sp"
+            android:hint="Latitute &amp; Longitute"
+            android:gravity="center_horizontal"
+            android:layout_marginBottom="8dp"
+            />
 
-            <TextView
-                android:id="@+id/locationEditText"
-                android:layout_width="0dp"
-                android:layout_weight="1"
-                android:layout_height="wrap_content"
-                android:text="Get Location"
-                android:textSize="20dp"
-                android:layout_gravity="center_vertical"
-                android:gravity="center_horizontal"/>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
 
             <Button
-                android:id="@+id/locationButton"
+                android:id="@+id/currentLocationButton"
                 android:layout_width="0dp"
                 android:layout_weight="1"
                 android:layout_height="wrap_content"
                 android:background="@color/colorPrimary"
                 android:textColor="#FFF"
-                android:text="Get Current Location" />
+                android:textStyle="bold"
+                android:text="Current Location" />
+
+            <TextView
+                android:layout_gravity="center"
+                android:layout_margin="16dp"
+                android:text="OR"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+
+            <Button
+                android:id="@+id/autoCompleteLocationButton"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="wrap_content"
+                android:background="@color/colorPrimary"
+                android:textColor="#FFF"
+                android:textStyle="bold"
+                android:text="other Location" />
 
         </LinearLayout>
 
-        <Button
-            android:id="@+id/submitButton"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="@color/colorPrimary"
-            android:textColor="#FFF"
-            android:text="Submit"
-            android:textSize="32dp" />
-
     </LinearLayout>
+
+    <Button
+        android:id="@+id/submitButton"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/colorPrimary"
+        android:textColor="#FFF"
+        android:text="Submit"
+        android:textStyle="bold"
+        android:textSize="20sp"
+        />
+
+</LinearLayout>
 
 </android.support.constraint.ConstraintLayout>

@@ -4,11 +4,14 @@ import android.content.Context;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.text.format.DateFormat;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+
+import com.squareup.picasso.Picasso;
 
 import org.bson.Document;
 
@@ -51,6 +54,8 @@ public class MessageListAdapter extends RecyclerView.Adapter<MessageViewHolder> 
         Date messageDate =  list.get(i).getDate("created_at");
         viewHolder.message_time.setText(DateFormat.format("K:mm a", messageDate).toString());
         viewHolder.message_date.setText(DateFormat.format("dd", messageDate).toString() + " " + DateFormat.format("MMM", messageDate).toString() + ", " + DateFormat.format("yyyy", messageDate).toString());
+        Picasso.with(context).load(list.get(i).getString("profile_photo_string")).into(viewHolder.image_message_profile);
+        //Log.d("image",list.get(i).getString("profile_photo_string") + "");
     }
 
 

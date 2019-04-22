@@ -39,9 +39,9 @@ import java.util.GregorianCalendar;
 public class AddHashtagActivity extends AppCompatActivity {
 
     EditText hashtagEditText;
-    Button submitButton, dateButton, locationButton;
+    Button submitButton, dateButton, currentLocationButton, autoCompleteLocationButton;
 
-    TextView dateEditText, locationEditText;
+    TextView dateTextView, locationTextView;
     private int mYear, mMonth, mDay;
     private Date tillDate;
     public double lat=0.0;
@@ -60,11 +60,12 @@ public class AddHashtagActivity extends AppCompatActivity {
         setTitle("Add a new HashTag");
 
         hashtagEditText = findViewById(R.id.topicNameEditText);
-        dateEditText = findViewById(R.id.dateEditText);
-        locationEditText = findViewById(R.id.locationEditText);
+        dateTextView = findViewById(R.id.dateTextView);
+        locationTextView = findViewById(R.id.locationTextView);
 
         dateButton = findViewById(R.id.dateButton);
-        locationButton = findViewById(R.id.locationButton);
+        currentLocationButton = findViewById(R.id.currentLocationButton);
+        autoCompleteLocationButton = findViewById(R.id.autoCompleteLocationButton);
         submitButton = findViewById(R.id.submitButton);
 
         client= Stitch.getDefaultAppClient();
@@ -82,7 +83,7 @@ public class AddHashtagActivity extends AppCompatActivity {
                         new DatePickerDialog.OnDateSetListener() {
                             @Override
                             public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
-                                dateEditText.setText(String.valueOf(dayOfMonth) + "-" + String.valueOf(monthOfYear + 1) + "-" + String.valueOf(year));
+                                dateTextView.setText(String.valueOf(dayOfMonth) + "-" + String.valueOf(monthOfYear + 1) + "-" + String.valueOf(year));
                                 Calendar c1 = GregorianCalendar.getInstance();
                                 c1.set(year, monthOfYear, dayOfMonth+1);
                                 tillDate = c1.getTime();
@@ -99,7 +100,7 @@ public class AddHashtagActivity extends AppCompatActivity {
 
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
 
-        locationButton.setOnClickListener(new View.OnClickListener() {
+        currentLocationButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
@@ -116,10 +117,17 @@ public class AddHashtagActivity extends AppCompatActivity {
 
                                     lng = location.getLongitude();
                                     lat = location.getLatitude();
-                                    locationEditText.setText("Lat-" + lat + " Lng-"+lng);
+                                    locationTextView.setText("Lat-" + lat + " & Lng-"+lng);
                                 }
                             }
                         });
+            }
+        });
+
+        autoCompleteLocationButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
             }
         });
 
