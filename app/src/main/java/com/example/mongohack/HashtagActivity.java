@@ -24,10 +24,13 @@ import com.mongodb.stitch.android.services.mongodb.remote.RemoteFindIterable;
 import com.mongodb.stitch.android.services.mongodb.remote.RemoteMongoClient;
 import com.mongodb.stitch.android.services.mongodb.remote.RemoteMongoCollection;
 
+import org.bson.BsonObjectId;
 import org.bson.Document;
 import org.bson.types.ObjectId;
 
+import java.sql.Array;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
@@ -49,6 +52,7 @@ public class HashtagActivity extends AppCompatActivity {
     ObjectId topicId;
 
     Date lastUpdated;
+    String hashtagName="";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -67,24 +71,32 @@ public class HashtagActivity extends AppCompatActivity {
         backButton = findViewById(R.id.back_button);
 
         String hashtagIdString = getIntent().getStringExtra("hashtagId");
+        hashtagName = getIntent().getStringExtra("hashtagName");
+
         topicId = new ObjectId(hashtagIdString);
 
         RemoteMongoCollection topics = HomeFragment.topics;
         Document top = new Document("_id",new ObjectId(hashtagIdString));
 
-        final Task<Document> task = topics.find(top).first();
-        task.addOnCompleteListener(new OnCompleteListener<Document>() {
-            @Override
-            public void onComplete(@NonNull Task<Document> task) {
-                if(task.isSuccessful()){
-                    Document d = task.getResult();
-                    ((TextView)(toolbarTitle.findViewById(R.id.toolbarTitle))).setText( d.getString("topic_name") );
-                }
-                else{
-                    Log.d("INFO","not open");
-                }
-            }
-        });
+        topics.updateOne(top, new Document("$inc",new Document("topic_count",1)));
+
+
+//        final Task<Document> task = topics.find(top).first();
+//        task.addOnCompleteListener(new OnCompleteListener<Document>() {
+//            @Override
+//            public void onComplete(@NonNull Task<Document> task) {
+//                if(task.isSuccessful()){
+//                    Document d = task.getResult();
+//                    ((TextView)(toolbarTitle.findViewById(R.id.toolbarTitle))).setText( d.getString("topic_name") );
+//                }
+//                else{
+//                    Log.d("INFO","not open");
+//                }
+//            }
+//        });
+
+        ((TextView)toolbarTitle.findViewById(R.id.toolbarTitle)).setText("#"+hashtagName);
+
 
         toolbarTitle.setOnClickListener(new View.OnClickListener() {
             @Override

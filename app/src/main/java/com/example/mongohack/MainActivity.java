@@ -18,6 +18,7 @@ import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.common.SignInButton;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.google.android.libraries.places.api.Places;
 import com.mongodb.stitch.android.core.Stitch;
 import com.mongodb.stitch.android.core.StitchAppClient;
 import com.mongodb.stitch.android.core.auth.StitchUser;
@@ -48,7 +49,19 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         requestPermission2();
 
 
-        client = Stitch.initializeDefaultAppClient(getResources().getString(R.string.initialiseClient));
+
+
+        try{
+            client = Stitch.getDefaultAppClient();
+//            Log.d('LOGIN)
+            startActivity(new Intent(getApplicationContext(),UserActivity.class));
+            finish();
+        }
+        catch (Exception e) {
+            client = Stitch.initializeDefaultAppClient(getResources().getString(R.string.initialiseClient));
+            Places.initialize(getApplicationContext(), getResources().getString(R.string.googleApiKey));
+        }
+
 
         signInButton = findViewById(R.id.button1);
         signInButton.setOnClickListener(this);
@@ -99,6 +112,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                         public void onComplete(@NonNull final Task<StitchUser> task) {
                             if (task.isSuccessful()) {
                                 startActivity(new Intent(getApplicationContext(),UserActivity.class));
+                                finish();
                             } else {
                             }
                         }

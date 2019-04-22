@@ -15,15 +15,22 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.gms.common.api.Status;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
+import com.google.android.libraries.places.api.Places;
+import com.google.android.libraries.places.api.model.Place;
+import com.google.android.libraries.places.api.net.PlacesClient;
+import com.google.android.libraries.places.widget.AutocompleteSupportFragment;
+import com.google.android.libraries.places.widget.listener.PlaceSelectionListener;
 import com.mongodb.lang.NonNull;
 import com.mongodb.stitch.android.core.Stitch;
 import com.mongodb.stitch.android.core.StitchAppClient;
 import com.mongodb.stitch.android.services.mongodb.remote.RemoteMongoCollection;
+
 
 import org.bson.BsonArray;
 import org.bson.BsonDocument;
@@ -59,13 +66,15 @@ public class AddHashtagActivity extends AppCompatActivity {
 
         setTitle("Add a new HashTag");
 
+
+
         hashtagEditText = findViewById(R.id.topicNameEditText);
         dateTextView = findViewById(R.id.dateTextView);
         locationTextView = findViewById(R.id.locationTextView);
 
         dateButton = findViewById(R.id.dateButton);
         currentLocationButton = findViewById(R.id.currentLocationButton);
-        autoCompleteLocationButton = findViewById(R.id.autoCompleteLocationButton);
+//        autoCompleteLocationButton = findViewById(R.id.autoCompleteLocationButton);
         submitButton = findViewById(R.id.submitButton);
 
         client= Stitch.getDefaultAppClient();
@@ -117,19 +126,39 @@ public class AddHashtagActivity extends AppCompatActivity {
 
                                     lng = location.getLongitude();
                                     lat = location.getLatitude();
-                                    locationTextView.setText("Lat-" + lat + " & Lng-"+lng);
+                                    Toast.makeText(getApplicationContext(), "Lat-" + lat + " & Lng-"+lng, Toast.LENGTH_SHORT).show();
+                                    locationTextView.setText("Current Location");
                                 }
                             }
                         });
             }
         });
 
-        autoCompleteLocationButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
+        AutocompleteSupportFragment autocompleteFragment = (AutocompleteSupportFragment)
+                getSupportFragmentManager().findFragmentById(R.id.autocomplete_fragment);
 
+        autocompleteFragment.setPlaceFields(Arrays.asList(Place.Field.LAT_LNG, Place.Field.NAME));
+
+        autocompleteFragment.setOnPlaceSelectedListener(new PlaceSelectionListener() {
+            @Override
+            public void onPlaceSelected(Place place) {
+                // TODO: Get info about the selected place.
+
+                lat = place.getLatLng().latitude;
+                lng = place.getLatLng().longitude;
+                Toast.makeText(getApplicationContext(), "Lat-" + lat + " & Lng-"+lng, Toast.LENGTH_SHORT).show();
+                locationTextView.setText(place.getName());
+//                Toast.makeText(getApplicationContext(), place.getLatLng().toString(), Toast.LENGTH_SHORT).show();
+//                Log.i(TAG, "Place: " + place.getName() + ", " + place.getId());
+            }
+
+            @Override
+            public void onError(Status status) {
+                // TODO: Handle the error.
+                Log.i("LOCERR", "An error occurred: " + status);
             }
         });
+
 
         submitButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -151,10 +180,11 @@ public class AddHashtagActivity extends AppCompatActivity {
                         .append("created_at",new Date())
                         .append("active_till_date",tillDate)
                         .append("user_name", client.getAuth().getUser().getProfile().getName())
-                        .append("owner_id",new ObjectId(client.getAuth().getUser().getId()));
+                        .append("owner_id",new ObjectId(client.getAuth().getUser().getId()))
+                        .append("topic_count", 0);
 
                 Log.d("DOC", d.toString());
-                Task findtask = topics.insertOne(d);
+                Task findtask = topics.sync().insertOne(d);
 
                 findtask.addOnCompleteListener(new OnCompleteListener() {
                     @Override
