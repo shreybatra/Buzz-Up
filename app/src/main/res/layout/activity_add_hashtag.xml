@@ -69,15 +69,16 @@ tools:context=".AddHashtagActivity">
                 android:textSize="20sp"
                 android:gravity="center_horizontal"/>
 
-            <Button
-                android:id="@+id/dateButton"
-                android:layout_width="0dp"
-                android:layout_weight="1"
-                android:layout_height="wrap_content"
-                android:background="@color/colorPrimary"
-                android:textColor="#FFF"
-                android:textStyle="bold"
-                android:text="select date" />
+                <Button
+                    android:id="@+id/dateButton"
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    android:layout_height="wrap_content"
+                    android:background="@color/colorPrimary"
+                    android:textColor="#FFF"
+                    android:textStyle="bold"
+                    android:text="select date" />
+
 
         </LinearLayout>
 
@@ -110,14 +111,11 @@ tools:context=".AddHashtagActivity">
             android:layout_marginBottom="8dp"
             />
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+
 
             <Button
                 android:id="@+id/currentLocationButton"
-                android:layout_width="0dp"
-                android:layout_weight="1"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="@color/colorPrimary"
                 android:textColor="#FFF"
@@ -131,17 +129,28 @@ tools:context=".AddHashtagActivity">
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content" />
 
-            <Button
-                android:id="@+id/autoCompleteLocationButton"
-                android:layout_width="0dp"
-                android:layout_weight="1"
-                android:layout_height="wrap_content"
-                android:background="@color/colorPrimary"
-                android:textColor="#FFF"
-                android:textStyle="bold"
-                android:text="other Location" />
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="2dp"
+            android:background="#dfdfdf" />
 
-        </LinearLayout>
+        <fragment android:id="@+id/autocomplete_fragment"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:name="com.google.android.libraries.places.widget.AutocompleteSupportFragment"
+            />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="2dp"
+            android:background="#dfdfdf" />
+
+
+
+
+
+
+
 
     </LinearLayout>
 

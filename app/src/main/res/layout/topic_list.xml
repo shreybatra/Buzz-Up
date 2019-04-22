@@ -47,6 +47,7 @@
         android:gravity="center"
         android:layout_below="@+id/abovemarge"
         android:text="123"
+        android:visibility="invisible"
         android:textSize="25sp" />
 
     <View

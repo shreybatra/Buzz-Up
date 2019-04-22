@@ -7,6 +7,8 @@
     android:background="@color/colorActivityBackground"
     tools:context=".HashtagActivity">
 
+
+
     <TextView
         android:id="@+id/toolbarTitle"
         style="@style/TextAppearance.Widget.AppCompat.Toolbar.Title"
@@ -15,17 +17,53 @@
         android:background="?attr/selectableItemBackground"
         android:gravity="center_vertical"
         android:padding="16dp"
-        android:textColor="#FFF" />
+        android:textColor="#FFFFFF"/>
+
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/l1"
+        app:layout_constraintTop_toTopOf="parent"
+        android:orientation="vertical">
+
+        <EditText
+            android:id="@+id/search_box"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_gravity="center"
+            android:layout_marginLeft="16dp"
+            android:layout_marginRight="16dp"
+            android:layout_weight="1"
+            android:textAlignment="center"
+            android:background="@drawable/rounded_rectangle_white"
+            android:hint="Search topic"
+            android:maxLines="6" />
+
+
+    </LinearLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="2dp"
+        android:layout_marginBottom="0dp"
+        android:id="@+id/v1"
+        android:background="#dfdfdf"
+        app:layout_constraintTop_toBottomOf="@+id/l1"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent" />
 
 
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/topic_list"
+        app:layout_constraintTop_toBottomOf="@+id/v1"
+        android:layout_margin="8dp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/my_awesome_toolbar"/>
+        app:layout_constraintRight_toRightOf="parent" />
 
 
 

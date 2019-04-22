@@ -102,7 +102,7 @@ public class HashtagInfoActivity extends AppCompatActivity {
             public void onComplete(@NonNull Task<Document> task) {
                 if(task.isSuccessful()){
                     Document d = task.getResult();
-                    toolbarTitle.setText( d.getString("topic_name") );
+                    toolbarTitle.setText( "#" + d.getString("topic_name") );
                     createdByTextView.setText(d.getString("user_name"));
                     topicOwnerName = d.getString("user_name");
                     //Log.d("topicOwnerName",topicOwnerName);
@@ -110,6 +110,7 @@ public class HashtagInfoActivity extends AppCompatActivity {
                     createdOnTextView.setText( DateFormat.format("dd",   date).toString() + " " + DateFormat.format("MMM",   date).toString() + ", " + DateFormat.format("yyyy",   date).toString() );
 
                     Date dateTill = d.getDate("active_till_date");
+                    Toast.makeText(getApplicationContext(), dateTill.toString(), Toast.LENGTH_SHORT).show();
                     topicActiveTillTextView.setText( DateFormat.format("dd",   dateTill).toString() + " " + DateFormat.format("MMM",   dateTill).toString() + ", " + DateFormat.format("yyyy",   dateTill).toString() );
 
                     Document locationDocument = (Document)d.get("location");
@@ -131,9 +132,6 @@ public class HashtagInfoActivity extends AppCompatActivity {
         locationButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //String uriStr = String.format(Locale.ENGLISH, "geo:%f,%f", 28.4089, 77.3178);
-                //String uriStr = "http://maps.google.com/maps?saddr=20.344,34.34&daddr=20.5666,45.345";
-                //String uriStr = "geo:" + lat.toString() + "," + lng.toString();
                 String uriStr = "http://maps.google.com/maps?daddr=" + lat.toString() + "," + lng.toString();
                 Intent mapIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(uriStr));
                 if (mapIntent.resolveActivity(getPackageManager()) != null) {

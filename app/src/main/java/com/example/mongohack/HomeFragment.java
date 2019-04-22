@@ -22,6 +22,7 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.Toast;
 
@@ -36,6 +37,7 @@ import com.mongodb.stitch.android.core.StitchAppClient;
 import com.mongodb.stitch.android.services.mongodb.remote.RemoteMongoClient;
 import com.mongodb.stitch.android.services.mongodb.remote.RemoteMongoCollection;
 import com.mongodb.stitch.android.services.mongodb.remote.SyncFindIterable;
+import com.mongodb.stitch.core.services.mongodb.remote.RemoteUpdateResult;
 import com.mongodb.stitch.core.services.mongodb.remote.sync.ChangeEventListener;
 import com.mongodb.stitch.core.services.mongodb.remote.sync.DefaultSyncConflictResolvers;
 import com.mongodb.stitch.core.services.mongodb.remote.sync.ErrorListener;
@@ -59,8 +61,11 @@ public class HomeFragment extends Fragment {
     EditText searchEditText;
     TopicListAdapter adapter;
 
+    EditText search_box;
+    ImageButton button_search;
+
     private StitchAppClient client;
-    public static RemoteMongoCollection topics;
+    public static RemoteMongoCollection topics, users;
     private FusedLocationProviderClient fusedLocationClient;
     MongoCollection<Document> localCollection;
 
@@ -78,6 +83,7 @@ public class HomeFragment extends Fragment {
     ArrayList<ObjectId> hashIds = new ArrayList<>();
 
     public Boolean loop = true;
+    public Boolean customLoop = false;
 
 
 
@@ -94,12 +100,27 @@ public class HomeFragment extends Fragment {
 
         getActivity().setTitle("Trending Topics");
 
+        search_box = view.findViewById(R.id.search_box);
+
+        client = Stitch.getDefaultAppClient();
+        final RemoteMongoClient rc = client.getServiceClient(RemoteMongoClient.factory,"mongodb-atlas");
+        topics = rc.getDatabase("mongohack").getCollection("topics");
+        users = rc.getDatabase("mongohack").getCollection("users");
+
+        topics.sync().configure(
+                DefaultSyncConflictResolvers.localWins(),
+                new MyUpdateListener(),
+                new MyErrorListener()
+        );
+
         requestPermission();
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(getActivity());
         if (ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED )  {
             Log.d("SUC", "Login done.");
             return;
         }
+
+        getTopics("");
 
         Toast.makeText(getContext(), "Getting Location" , Toast.LENGTH_SHORT).show();
         fusedLocationClient.getLastLocation()
@@ -112,31 +133,51 @@ public class HomeFragment extends Fragment {
                             lng =location.getLongitude();
 //                            locationEditText.setText(location.toString());
                             Toast.makeText(getContext(), "SYNCING" , Toast.LENGTH_SHORT).show();
-                            getTopics();
+
+                            getTopics("");
                             runLoop();
                         }
                     }
                 });
 
 
-        client = Stitch.getDefaultAppClient();
-        final RemoteMongoClient rc = client.getServiceClient(RemoteMongoClient.factory,"mongodb-atlas");
-        topics = rc.getDatabase("mongohack").getCollection("topics");
 
-//        topics.sync().configure(
-//                DefaultSyncConflictResolvers.localWins(),
-//                new MyUpdateListener(),
-//                new MyErrorListener()
-//        );
 
 //        hashtags = new String[]{"Sync in Progress."};
 
-        getTopics();
+
 
         listView = view.findViewById(R.id.topic_list);
         adapter = new TopicListAdapter(hashtags, getContext());
         listView.setAdapter(adapter);
         listView.setLayoutManager(new LinearLayoutManager(getContext()));
+
+        search_box.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                    if(s.toString().equals(""))
+                    {
+                        customLoop = false;
+                        getTopics("");
+                    }
+                    else {
+                        customLoop = true;
+                        getTopics(s.toString());
+
+                    }
+            }
+        });
+
 
 
     }
@@ -147,8 +188,8 @@ public class HomeFragment extends Fragment {
 
             @Override
             public void run() {
-                if(loop) {
-                    getTopics();
+                if(loop && !customLoop) {
+                    getTopics("");
                     Log.d("CRON", "SYNCED");
                     handler.postDelayed(this, 5000);
                 }
@@ -195,12 +236,21 @@ public class HomeFragment extends Fragment {
     }
 
 
-    public void getTopics() {
+    public void getTopics(String textsearch) {
+
+        if(!loop)
+            return ;
+
+        if(textsearch.equals("") && customLoop)
+        {
+            return ;
+        }
 
         Document filter = new Document()
                 .append("lat", lat)
                 .append("lng", lng)
-                .append("radius", 2);
+                .append("radius", 2)
+                .append("text_search",textsearch);
 
         Log.d("LATLONG", "" + lat + " " + lng);
         client.callFunction("getTopicIds", asList(filter.toJson()), ArrayList.class)
@@ -309,7 +359,7 @@ public class HomeFragment extends Fragment {
     }
 
     private void requestPermission(){
-        ActivityCompat.requestPermissions(getActivity(),new String[]{Manifest.permission.ACCESS_FINE_LOCATION},1);
+        ActivityCompat.requestPermissions(getActivity(),new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},1);
     }
 
     @Override
@@ -317,11 +367,15 @@ public class HomeFragment extends Fragment {
         super.onPause();
 
         loop = false;
+
+
     }
 
     @Override
     public void onResume() {
         super.onResume();
+
         loop = true;
+
     }
 }

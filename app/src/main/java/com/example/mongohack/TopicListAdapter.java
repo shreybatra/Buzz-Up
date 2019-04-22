@@ -48,7 +48,7 @@ public class TopicListAdapter extends RecyclerView.Adapter<TopicViewHolder> {
     @Override
     public void onBindViewHolder(@NonNull TopicViewHolder topicViewHolder, int i) {
         topicViewHolder.topic_name.setText(list.get(i).getString("topic_name"));
-        topicViewHolder.topic_count.setText("+123");
+        topicViewHolder.topic_count.setText("+" + list.get(i).getInteger("topic_count"));
         topicViewHolder.topic_number.setText(i+1 +".");
 
         topicViewHolder.itemView.setOnClickListener(new View.OnClickListener() {
@@ -57,6 +57,7 @@ public class TopicListAdapter extends RecyclerView.Adapter<TopicViewHolder> {
 
                 Intent intent = new Intent(context.getApplicationContext(), HashtagActivity.class);
                 intent.putExtra("hashtagId", list.get(i).getObjectId("_id").toString());
+                intent.putExtra("hashtagName", list.get(i).getString("topic_name"));
                 context.startActivity(intent);
 
             }
