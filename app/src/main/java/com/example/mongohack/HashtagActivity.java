@@ -53,6 +53,7 @@ public class HashtagActivity extends AppCompatActivity {
 
     Date lastUpdated;
     String hashtagName="";
+    String hashtagIdString;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -70,8 +71,10 @@ public class HashtagActivity extends AppCompatActivity {
         LinearLayout toolbarTitle = findViewById(R.id.toolbar);
         backButton = findViewById(R.id.back_button);
 
-        String hashtagIdString = getIntent().getStringExtra("hashtagId");
-        hashtagName = getIntent().getStringExtra("hashtagName");
+        hashtagIdString = getIntent().getStringExtra("hashtagId");
+        //hashtagName = getIntent().getStringExtra("hashtagName");
+        hashtagName = "ipl";
+        Log.d("hashtag name",hashtagName);
 
         topicId = new ObjectId(hashtagIdString);
 

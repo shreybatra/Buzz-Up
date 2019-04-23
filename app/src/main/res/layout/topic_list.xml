@@ -2,7 +2,9 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content">
+    android:layout_height="wrap_content"
+    android:background="#fff"
+    >
 
     <View
         android:layout_width="match_parent"
@@ -18,6 +20,7 @@
         android:gravity="center"
         android:layout_marginStart="20dp"
         android:text="#1"
+        android:textColor="#000"
         android:textSize="25sp" />
 
     <TextView
@@ -27,6 +30,7 @@
         android:layout_centerHorizontal="true"
         android:layout_below="@+id/abovemarge"
         android:text="abcd"
+        android:textColor="@color/colorPrimary"
         android:textSize="25sp" />
 
     <TextView
@@ -36,19 +40,61 @@
         android:layout_toLeftOf="@+id/topic_name"
         android:layout_below="@+id/abovemarge"
         android:text="#"
+        android:textColor="@color/colorPrimary"
+        android:textStyle="bold"
         android:textSize="25sp" />
 
-    <TextView
-        android:id="@+id/topic_count"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+    <!--<TextView-->
+        <!--android:id="@+id/topic_count"-->
+        <!--android:layout_width="wrap_content"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:layout_alignParentEnd="true"-->
+        <!--android:layout_marginEnd="20dp"-->
+        <!--android:gravity="center"-->
+        <!--android:layout_below="@+id/abovemarge"-->
+        <!--android:text="123"-->
+        <!--android:visibility="invisible"-->
+        <!--android:textSize="25sp" />-->
+
+    <LinearLayout
+        android:layout_width="80dp"
+        android:layout_height="50dp"
         android:layout_alignParentEnd="true"
-        android:layout_marginEnd="20dp"
-        android:gravity="center"
-        android:layout_below="@+id/abovemarge"
-        android:text="123"
-        android:visibility="invisible"
-        android:textSize="25sp" />
+        android:paddingRight="20dp"
+        android:layout_centerVertical="true" >
+        <ImageView
+            android:id="@+id/fireIconBigId"
+            android:src="@drawable/fire_icon"
+            android:scaleType="centerCrop"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:layout_gravity="center_vertical"
+            android:visibility="gone"
+            />
+
+        <ImageView
+            android:id="@+id/fireIconMediumId"
+            android:src="@drawable/fire_icon"
+            android:scaleType="centerCrop"
+            android:layout_width="43dp"
+            android:layout_height="43dp"
+            android:layout_gravity="center_vertical"
+            android:paddingLeft="3dp"
+            android:visibility="gone"
+            />
+
+        <ImageView
+            android:id="@+id/fireIconSmallId"
+            android:src="@drawable/fire_icon"
+            android:scaleType="centerCrop"
+            android:layout_width="35dp"
+            android:layout_height="35dp"
+            android:layout_gravity="center_vertical"
+            android:paddingLeft="7dp"
+            android:visibility="gone"
+            />
+
+    </LinearLayout>
 
     <View
         android:layout_width="match_parent"

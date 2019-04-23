@@ -65,21 +65,10 @@
                     android:textStyle="bold" />
 
                 <TextView
-                    android:id="@+id/location"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_below="@+id/name"
-                    android:layout_centerHorizontal="true"
-                    android:layout_marginTop="10dp"
-                    android:text="(Surat)"
-                    android:textColor="#fff"
-                    android:textSize="16sp" />
-
-                <TextView
                     android:id="@+id/email"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_below="@+id/location"
+                    android:layout_below="@id/name"
                     android:layout_centerHorizontal="true"
                     android:layout_marginTop="10dp"
                     android:text="Email"
@@ -95,7 +84,7 @@
                 android:layout_marginTop="16dp"
                 android:layout_marginBottom="16dp"
                 android:background="@color/colorPrimary"
-                android:text="My hash tags"
+                android:text="My Buzz"
                 android:textColor="#FFF"
                 android:textSize="16sp"
                 android:textStyle="bold" />

@@ -82,7 +82,10 @@ public class ProfileFragment extends Fragment {
                 .addOnCompleteListener(new OnCompleteListener() {
                     @Override
                     public void onComplete(@NonNull Task task) {
-                        Toast.makeText(getContext(),""+docList.size(), Toast.LENGTH_LONG).show();
+                        if(docList.size()==0)
+                            Toast.makeText(getContext(),"You have not created any Hashtags", Toast.LENGTH_LONG).show();
+                        else
+                            Toast.makeText(getContext(),""+docList.size(), Toast.LENGTH_LONG).show();
                         adapter = new TopicListAdapter(docList, getContext());
                         listView.setAdapter(adapter);
                     }

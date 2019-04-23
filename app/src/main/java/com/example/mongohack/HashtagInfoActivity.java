@@ -31,8 +31,9 @@ import java.util.Locale;
 
 public class HashtagInfoActivity extends AppCompatActivity {
 
-    private TextView topicNameTextView, createdOnTextView, createdByTextView, topicActiveTillTextView;
-    Button locationButton, editInfoButton;
+    private TextView createdOnTextView, createdByTextView, topicActiveTillTextView;
+    Button locationButton;
+    ImageButton editInfoButton;
     private Double lng, lat;
     ImageButton backButton;
 
@@ -41,6 +42,7 @@ public class HashtagInfoActivity extends AppCompatActivity {
 
     String currentUserName, topicOwnerName;
 
+    String hashtagIdString;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -51,17 +53,13 @@ public class HashtagInfoActivity extends AppCompatActivity {
         final RemoteMongoClient rc = client.getServiceClient(RemoteMongoClient.factory, "mongodb-atlas");
         users = rc.getDatabase("mongohack").getCollection("users");
 
-
         getSupportActionBar().hide();
 
         TextView toolbarTitle = findViewById(R.id.toolbarTitle);
         backButton = findViewById(R.id.back_button);
 
-        String hashtagIdString = getIntent().getStringExtra("hashtagId");
+        hashtagIdString = getIntent().getStringExtra("hashtagId");
 
-
-
-        //topicNameTextView = findViewById(R.id.topicNameId);
         createdByTextView = findViewById(R.id.createdById);
         createdOnTextView = findViewById(R.id.createdOnId);
         topicActiveTillTextView = findViewById(R.id.topicActiveTillId);
@@ -73,26 +71,6 @@ public class HashtagInfoActivity extends AppCompatActivity {
 
         Log.d("USERDOC", top.toString());
 
-//        final Task<Document> t = users.find(new Document("_id",client.getAuth().getUser().getId())).first();
-//        t.addOnCompleteListener(new OnCompleteListener<Document>() {
-//            @Override
-//            public void onComplete(@NonNull Task<Document> task) {
-//                if(task.isSuccessful())
-//                {
-//
-//                    Document d = task.getResult();
-//                    Document data = (Document) d.get("data");
-//                    //Log.d("data user",data.getString("name").toString());
-//                    currentUserName = data.getString("name");
-//                    Log.d("currentUserName",currentUserName);
-//
-//                }
-//                else
-//                {
-//                    Log.d("USER", task.getException().toString());
-//                }
-//            }
-//        });
         currentUserName = client.getAuth().getUser().getProfile().getName();
 
 
@@ -110,7 +88,6 @@ public class HashtagInfoActivity extends AppCompatActivity {
                     createdOnTextView.setText( DateFormat.format("dd",   date).toString() + " " + DateFormat.format("MMM",   date).toString() + ", " + DateFormat.format("yyyy",   date).toString() );
 
                     Date dateTill = d.getDate("active_till_date");
-                    Toast.makeText(getApplicationContext(), dateTill.toString(), Toast.LENGTH_SHORT).show();
                     topicActiveTillTextView.setText( DateFormat.format("dd",   dateTill).toString() + " " + DateFormat.format("MMM",   dateTill).toString() + ", " + DateFormat.format("yyyy",   dateTill).toString() );
 
                     Document locationDocument = (Document)d.get("location");
@@ -150,31 +127,15 @@ public class HashtagInfoActivity extends AppCompatActivity {
             }
         });
 
-
-
-//        if( topicOwnerName.equals( currentUserName ) ) {
-//            editInfoButton.setVisibility(View.VISIBLE);
-            editInfoButton.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    Intent intent = new Intent(getApplicationContext(),EditHashtagActivity.class);
-                    intent.putExtra("hashtagId",hashtagIdString);
-                    startActivity(intent);
-                    finish();
-                }
-            });
-//            Log.d("button display","yes");
-//        }
-//        else {
-//            Log.d("button display","no");
-//        }
-
-//        if( topicOwnerName.equals( currentUserName ) ) {
-//            Log.d("button display","yes");
-//        }
-//        else {
-//            Log.d("button display","no");
-//        }
+        editInfoButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getApplicationContext(),EditHashtagActivity.class);
+                intent.putExtra("hashtagId",hashtagIdString);
+                startActivity(intent);
+                finish();
+            }
+        });
 
     }
 }

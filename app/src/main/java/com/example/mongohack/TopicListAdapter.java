@@ -48,8 +48,25 @@ public class TopicListAdapter extends RecyclerView.Adapter<TopicViewHolder> {
     @Override
     public void onBindViewHolder(@NonNull TopicViewHolder topicViewHolder, int i) {
         topicViewHolder.topic_name.setText(list.get(i).getString("topic_name"));
-        topicViewHolder.topic_count.setText("+" + list.get(i).getInteger("topic_count"));
+        //topicViewHolder.topic_count.setText("+" + list.get(i).getInteger("topic_count"));
         topicViewHolder.topic_number.setText(i+1 +".");
+        switch(i){
+            case 0:{
+                topicViewHolder.fireIconBig.setVisibility(View.VISIBLE);
+                break;
+            }
+            case 1: {
+                topicViewHolder.fireIconMedium.setVisibility(View.VISIBLE);
+                break;
+            }
+            case 2: {
+                topicViewHolder.fireIconSmall.setVisibility(View.VISIBLE);
+                break;
+            }
+            default:{
+                break;
+            }
+        }
 
         topicViewHolder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override

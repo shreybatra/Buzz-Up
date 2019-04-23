@@ -47,6 +47,18 @@
                     android:textSize="32sp"
                     android:textStyle="bold" />
 
+                <ImageButton
+                    android:id="@+id/editInfoButton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="@color/colorPrimary"
+                    android:src="@drawable/icon_edit_24"
+                    android:foreground="?attr/selectableItemBackground"
+                    android:layout_alignParentBottom="true"
+                    android:layout_alignParentRight="true"
+                    android:padding="16dp"
+                    />
+
             </RelativeLayout>
         </android.support.v7.widget.Toolbar>
 
@@ -138,7 +150,7 @@
                     android:layout_weight="1"
                     android:gravity="center_vertical"
                     android:paddingLeft="8dp"
-                    android:text="Topic Active Till"
+                    android:text="Buzz Active Till"
                     android:textColor="#000"
                     android:textSize="20dp" />
 
@@ -174,17 +186,17 @@
                 android:textStyle="bold"
                 />
 
-            <Button
-                android:id="@+id/editInfoButton"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:background="@color/colorPrimary"
-                android:text="edit topic info"
-                android:textColor="#FFF"
-                android:textStyle="bold"
-                android:layout_marginTop="16dp"
-                android:visibility="gone"
-                />
+            <!--<Button-->
+                <!--android:id="@+id/editInfoButton"-->
+                <!--android:layout_width="match_parent"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:background="@color/colorPrimary"-->
+                <!--android:text="edit topic info"-->
+                <!--android:textColor="#FFF"-->
+                <!--android:textStyle="bold"-->
+                <!--android:layout_marginTop="16dp"-->
+                <!--android:visibility="gone"-->
+                <!--/>-->
 
         </LinearLayout>
 

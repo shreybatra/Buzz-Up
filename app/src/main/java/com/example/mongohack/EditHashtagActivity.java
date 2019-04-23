@@ -2,6 +2,7 @@ package com.example.mongohack;
 
 import android.Manifest;
 import android.app.DatePickerDialog;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.Location;
 import android.support.annotation.NonNull;
@@ -14,6 +15,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -45,9 +47,10 @@ import java.util.GregorianCalendar;
 public class EditHashtagActivity extends AppCompatActivity {
 
     EditText hashtagEditText;
-    Button submitButton, dateButton, currentLocationButton, autoCompleteLocationButton;
+    Button submitButton, dateButton, currentLocationButton;
+    ImageButton backButton;
 
-    TextView dateTextView, locationTextView;
+    TextView dateEditText, locationEditText;
     TextView topicHeadingTextView;
     private int mYear, mMonth, mDay;
     private Date tillDate;
@@ -59,30 +62,35 @@ public class EditHashtagActivity extends AppCompatActivity {
 
     private FusedLocationProviderClient fusedLocationClient;
 
+    String hashtagIdString;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_hashtag);
 
-        setTitle("Edit Topic Info");
+        getSupportActionBar().hide();
+
+        TextView toolbarTitle = findViewById(R.id.toolbarTitle);
+        toolbarTitle.setText("Edit Buzz Info");
+        backButton = findViewById(R.id.back_button);
 
         hashtagEditText = findViewById(R.id.topicNameEditText);
-        dateTextView = findViewById(R.id.dateTextView);
-        locationTextView = findViewById(R.id.locationTextView);
+        dateEditText = findViewById(R.id.dateEditText);
+        locationEditText = findViewById(R.id.locationEditText);
 
         dateButton = findViewById(R.id.dateButton);
         currentLocationButton = findViewById(R.id.currentLocationButton);
-//        autoCompleteLocationButton = findViewById(R.id.autoCompleteLocationButton);
         submitButton = findViewById(R.id.submitButton);
 
         topicHeadingTextView = findViewById(R.id.topicHeadingTextView);
-        topicHeadingTextView.setText("Edit Topic Name");
+        topicHeadingTextView.setText("Edit Buzz Name");
         submitButton.setText("Save Changes");
 
         client= Stitch.getDefaultAppClient();
         topics = HomeFragment.topics;
 
-        String hashtagIdString = getIntent().getStringExtra("hashtagId");
+        hashtagIdString = getIntent().getStringExtra("hashtagId");
         Document top = new Document("_id",new BsonObjectId(new ObjectId(hashtagIdString)));
 
         final Task<Document> task = topics.find(top).first();
@@ -96,12 +104,12 @@ public class EditHashtagActivity extends AppCompatActivity {
                     Date dateTill = d.getDate("active_till_date");
                     //dateTillEditText.setText( DateFormat.format("dd",   dateTill).toString() + " " + DateFormat.format("MMM",   dateTill).toString() + ", " + DateFormat.format("yyyy",   dateTill).toString() );
                     tillDate = dateTill;
-                    dateTextView.setText( DateFormat.format("dd MMM, yyyy",   dateTill).toString() );
+                    dateEditText.setText( DateFormat.format("dd MMM, yyyy",   dateTill).toString() );
                     Document locationDocument = (Document)d.get("location");
                     ArrayList<Double> coord = (ArrayList<Double>)locationDocument.get("coordinates");
                     lng = coord.get(0);
                     lat = coord.get(1);
-                    locationTextView.setText("Lat-" + lat + " & Lng-"+lng);
+                    locationEditText.setText("Lat-" + lat + " & Lng-"+lng);
                 }
                 else{
                     Log.d("INFO","not open");
@@ -121,7 +129,7 @@ public class EditHashtagActivity extends AppCompatActivity {
                         new DatePickerDialog.OnDateSetListener() {
                             @Override
                             public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
-                                dateTextView.setText(String.valueOf(dayOfMonth) + "-" + String.valueOf(monthOfYear + 1) + "-" + String.valueOf(year));
+                                dateEditText.setText(String.valueOf(dayOfMonth) + "-" + String.valueOf(monthOfYear + 1) + "-" + String.valueOf(year));
                                 Calendar c1 = GregorianCalendar.getInstance();
                                 c1.set(year, monthOfYear, dayOfMonth+1);
                                 tillDate = c1.getTime();
@@ -156,7 +164,7 @@ public class EditHashtagActivity extends AppCompatActivity {
                                     lng = location.getLongitude();
                                     lat = location.getLatitude();
                                     Toast.makeText(getApplicationContext(), "Lat-" + lat + " & Lng-"+lng, Toast.LENGTH_SHORT).show();
-                                    locationTextView.setText("Current Location");
+                                    locationEditText.setText("Current Location");
                                 }
                             }
                         });
@@ -165,7 +173,7 @@ public class EditHashtagActivity extends AppCompatActivity {
 
         AutocompleteSupportFragment autocompleteFragment = (AutocompleteSupportFragment)
                 getSupportFragmentManager().findFragmentById(R.id.autocomplete_fragment);
-
+        autocompleteFragment.setHint("Enter Custom Buzz Location");
         autocompleteFragment.setPlaceFields(Arrays.asList(Place.Field.LAT_LNG, Place.Field.NAME));
 
         autocompleteFragment.setOnPlaceSelectedListener(new PlaceSelectionListener() {
@@ -176,7 +184,7 @@ public class EditHashtagActivity extends AppCompatActivity {
                 lat = place.getLatLng().latitude;
                 lng = place.getLatLng().longitude;
                 Toast.makeText(getApplicationContext(), "Lat-" + lat + " & Lng-"+lng, Toast.LENGTH_SHORT).show();
-                locationTextView.setText(place.getName());
+                locationEditText.setText(place.getName());
 //                Toast.makeText(getApplicationContext(), place.getLatLng().toString(), Toast.LENGTH_SHORT).show();
 //                Log.i(TAG, "Place: " + place.getName() + ", " + place.getId());
             }
@@ -193,6 +201,26 @@ public class EditHashtagActivity extends AppCompatActivity {
             public void onClick(View v) {
                 String newHashtag = hashtagEditText.getText().toString();
                 Log.d("hashtag name",newHashtag);
+                if(newHashtag.isEmpty()){
+                    hashtagEditText.setError("Buzz Name is empty");
+                    hashtagEditText.requestFocus();
+                    return;
+                }
+                if(newHashtag.contains(" ")){
+                    hashtagEditText.setError("Buzz Name should not contain any spaces");
+                    hashtagEditText.requestFocus();
+                    return;
+                }
+                if(dateEditText.getText().toString().isEmpty()){
+                    dateEditText.setError("Date is not selected");
+                    dateEditText.requestFocus();
+                    return;
+                }
+                if(locationEditText.getText().toString().isEmpty()){
+                    locationEditText.setError("Location is not selected");
+                    locationEditText.requestFocus();
+                    return;
+                }
 
                 Document new_d = new Document()
                         .append("topic_name",newHashtag)
@@ -219,17 +247,28 @@ public class EditHashtagActivity extends AppCompatActivity {
                     public void onComplete(@com.mongodb.lang.NonNull Task task) {
                         if(task.isSuccessful())
                         {
-                            Toast.makeText(getApplicationContext(), "hashtag added", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(getApplicationContext(), "Buzz added", Toast.LENGTH_SHORT).show();
                             finish();
                         }
                         else{
-                            Toast.makeText(getApplicationContext(), "hashtag could not be added", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(getApplicationContext(), "Buzz could not be added", Toast.LENGTH_SHORT).show();
                             finish();
                         }
                     }
                 });
             }
         });
+
+        backButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent=new Intent(getApplicationContext(), HashtagInfoActivity.class);
+                intent.putExtra("hashtagId",hashtagIdString);
+                startActivity(intent);
+                finish();
+            }
+        });
+
     }
     private void requestPermission(){
         ActivityCompat.requestPermissions(this,new String[]{Manifest.permission.ACCESS_FINE_LOCATION},1);

@@ -5,13 +5,45 @@ xmlns:tools="http://schemas.android.com/tools"
 android:layout_width="match_parent"
 android:layout_height="match_parent"
 android:background="@color/colorActivityBackground"
-android:padding="16dp"
 tools:context=".AddHashtagActivity">
 
 <LinearLayout
     android:orientation="vertical"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="wrap_content"
+    app:layout_constraintLeft_toLeftOf="parent"
+    app:layout_constraintRight_toRightOf="parent"
+    app:layout_constraintTop_toTopOf="parent" >
+
+    <android.support.v7.widget.Toolbar
+        android:id="@+id/my_awesome_toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/colorPrimary"
+        android:minHeight="?attr/actionBarSize" >
+
+        <ImageButton
+            android:id="@+id/back_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@color/colorPrimary"
+            android:gravity="center"
+            android:padding="8dp"
+            android:src="@drawable/icon_arrow_left" />
+
+        <TextView
+            android:text="title"
+            android:id="@+id/toolbarTitle"
+            style="@style/TextAppearance.Widget.AppCompat.Toolbar.Title"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textColor="#FFF"
+            android:padding="8dp"
+            android:textStyle="bold" />
+
+    </android.support.v7.widget.Toolbar>
+
+
 
     <LinearLayout
         android:orientation="vertical"
@@ -19,11 +51,12 @@ tools:context=".AddHashtagActivity">
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:padding="8dp"
-        android:layout_marginBottom="16dp" >
+        android:layout_marginTop="8dp"
+        android:layout_marginBottom="8dp" >
 
         <TextView
             android:id="@+id/topicHeadingTextView"
-            android:text="Add a New Topic"
+            android:text="Add a New Buzz"
             android:textColor="@color/colorPrimary"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content" />
@@ -43,11 +76,11 @@ tools:context=".AddHashtagActivity">
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:padding="8dp"
-        android:layout_marginBottom="16dp" >
+        android:layout_marginBottom="8dp" >
 
         <TextView
             android:id="@+id/dateHeadingTextView"
-            android:text="Select Date till which topic will be active"
+            android:text="Select Date till which Buzz will be active"
             android:textColor="@color/colorPrimary"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -59,8 +92,8 @@ tools:context=".AddHashtagActivity">
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
-            <TextView
-                android:id="@+id/dateTextView"
+            <EditText
+                android:id="@+id/dateEditText"
                 android:layout_width="0dp"
                 android:layout_weight="1"
                 android:layout_height="wrap_content"
@@ -77,8 +110,7 @@ tools:context=".AddHashtagActivity">
                     android:background="@color/colorPrimary"
                     android:textColor="#FFF"
                     android:textStyle="bold"
-                    android:text="select date" />
-
+                    android:text="Buzz Active till date" />
 
         </LinearLayout>
 
@@ -90,18 +122,18 @@ tools:context=".AddHashtagActivity">
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:padding="8dp"
-        android:layout_marginBottom="16dp" >
+        android:layout_marginBottom="8dp" >
 
         <TextView
             android:id="@+id/locationHeadingTextView"
-            android:text="Select Location of Topic"
+            android:text="Select Location of Buzz"
             android:textColor="@color/colorPrimary"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginBottom="8dp" />
 
-        <TextView
-            android:id="@+id/locationTextView"
+        <EditText
+            android:id="@+id/locationEditText"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:textColor="#000"
@@ -109,9 +141,8 @@ tools:context=".AddHashtagActivity">
             android:hint="Latitute &amp; Longitute"
             android:gravity="center_horizontal"
             android:layout_marginBottom="8dp"
+
             />
-
-
 
             <Button
                 android:id="@+id/currentLocationButton"
@@ -120,7 +151,7 @@ tools:context=".AddHashtagActivity">
                 android:background="@color/colorPrimary"
                 android:textColor="#FFF"
                 android:textStyle="bold"
-                android:text="Current Location" />
+                android:text="set buzz to Current Location" />
 
             <TextView
                 android:layout_gravity="center"
@@ -145,13 +176,6 @@ tools:context=".AddHashtagActivity">
             android:layout_height="2dp"
             android:background="#dfdfdf" />
 
-
-
-
-
-
-
-
     </LinearLayout>
 
     <Button
@@ -166,5 +190,6 @@ tools:context=".AddHashtagActivity">
         />
 
 </LinearLayout>
+
 
 </android.support.constraint.ConstraintLayout>

@@ -48,7 +48,7 @@
                 />
 
             <TextView
-                android:text="Tap here for topic info"
+                android:text="Tap here for Buzz info"
                 style="@style/TextAppearance.Widget.AppCompat.Toolbar.Title"
                 android:layout_width="match_parent"
                 android:layout_height="0dp"

@@ -38,7 +38,7 @@
             android:layout_weight="1"
             android:textAlignment="center"
             android:background="@drawable/rounded_rectangle_white"
-            android:hint="Search topic"
+            android:hint="Search Buzz"
             android:maxLines="6" />
 
 

@@ -2,6 +2,7 @@ package com.example.mongohack;
 
 import android.Manifest;
 import android.app.DatePickerDialog;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.Location;
 import android.os.Bundle;
@@ -12,6 +13,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -46,9 +48,10 @@ import java.util.GregorianCalendar;
 public class AddHashtagActivity extends AppCompatActivity {
 
     EditText hashtagEditText;
-    Button submitButton, dateButton, currentLocationButton, autoCompleteLocationButton;
+    Button submitButton, dateButton, currentLocationButton;
+    ImageButton backButton;
 
-    TextView dateTextView, locationTextView;
+    EditText dateEditText, locationEditText;
     private int mYear, mMonth, mDay;
     private Date tillDate;
     public double lat=0.0;
@@ -64,18 +67,21 @@ public class AddHashtagActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_hashtag);
 
-        setTitle("Add a new HashTag");
+        getSupportActionBar().hide();
 
-
+        TextView toolbarTitle = findViewById(R.id.toolbarTitle);
+        toolbarTitle.setText("Add a new Local Buzz");
+        backButton = findViewById(R.id.back_button);
 
         hashtagEditText = findViewById(R.id.topicNameEditText);
-        dateTextView = findViewById(R.id.dateTextView);
-        locationTextView = findViewById(R.id.locationTextView);
+        dateEditText = findViewById(R.id.dateEditText);
+        locationEditText = findViewById(R.id.locationEditText);
 
         dateButton = findViewById(R.id.dateButton);
         currentLocationButton = findViewById(R.id.currentLocationButton);
-//        autoCompleteLocationButton = findViewById(R.id.autoCompleteLocationButton);
         submitButton = findViewById(R.id.submitButton);
+
+        hashtagEditText.setText( "" );
 
         client= Stitch.getDefaultAppClient();
         topics = HomeFragment.topics;
@@ -92,7 +98,7 @@ public class AddHashtagActivity extends AppCompatActivity {
                         new DatePickerDialog.OnDateSetListener() {
                             @Override
                             public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
-                                dateTextView.setText(String.valueOf(dayOfMonth) + "-" + String.valueOf(monthOfYear + 1) + "-" + String.valueOf(year));
+                                dateEditText.setText(String.valueOf(dayOfMonth) + "-" + String.valueOf(monthOfYear + 1) + "-" + String.valueOf(year));
                                 Calendar c1 = GregorianCalendar.getInstance();
                                 c1.set(year, monthOfYear, dayOfMonth+1);
                                 tillDate = c1.getTime();
@@ -127,7 +133,7 @@ public class AddHashtagActivity extends AppCompatActivity {
                                     lng = location.getLongitude();
                                     lat = location.getLatitude();
                                     Toast.makeText(getApplicationContext(), "Lat-" + lat + " & Lng-"+lng, Toast.LENGTH_SHORT).show();
-                                    locationTextView.setText("Current Location");
+                                    locationEditText.setText("Current Location");
                                 }
                             }
                         });
@@ -138,6 +144,9 @@ public class AddHashtagActivity extends AppCompatActivity {
                 getSupportFragmentManager().findFragmentById(R.id.autocomplete_fragment);
 
         autocompleteFragment.setPlaceFields(Arrays.asList(Place.Field.LAT_LNG, Place.Field.NAME));
+        autocompleteFragment.setHint("Enter Custom Buzz Location");
+
+        //autocompleteFragment.getView().setBackgroundDrawable(getResources().getDrawable(R.drawable.rounded_rectangle_white));
 
         autocompleteFragment.setOnPlaceSelectedListener(new PlaceSelectionListener() {
             @Override
@@ -147,7 +156,7 @@ public class AddHashtagActivity extends AppCompatActivity {
                 lat = place.getLatLng().latitude;
                 lng = place.getLatLng().longitude;
                 Toast.makeText(getApplicationContext(), "Lat-" + lat + " & Lng-"+lng, Toast.LENGTH_SHORT).show();
-                locationTextView.setText(place.getName());
+                locationEditText.setText(place.getName());
 //                Toast.makeText(getApplicationContext(), place.getLatLng().toString(), Toast.LENGTH_SHORT).show();
 //                Log.i(TAG, "Place: " + place.getName() + ", " + place.getId());
             }
@@ -165,6 +174,26 @@ public class AddHashtagActivity extends AppCompatActivity {
             public void onClick(View v) {
                 String newHashtag = hashtagEditText.getText().toString();
                 Log.d("hashtag name",newHashtag);
+                if(newHashtag.isEmpty()){
+                    hashtagEditText.setError("Buzz Name is empty");
+                    hashtagEditText.requestFocus();
+                    return;
+                }
+                if(newHashtag.contains(" ")){
+                    hashtagEditText.setError("Buzz Name should not contain any spaces");
+                    hashtagEditText.requestFocus();
+                    return;
+                }
+                if(dateEditText.getText().toString().isEmpty()){
+                    dateEditText.setError("Date is not selected");
+                    dateEditText.requestFocus();
+                    return;
+                }
+                if(locationEditText.getText().toString().isEmpty()){
+                    locationEditText.setError("Location is not selected");
+                    locationEditText.requestFocus();
+                    return;
+                }
 
                 Document d = new Document()
                         .append("topic_name",newHashtag)
@@ -192,15 +221,24 @@ public class AddHashtagActivity extends AppCompatActivity {
                         if(task.isSuccessful())
                         {
                             Log.d("hashtag adding TAG", task.getResult().toString());
-                            Toast.makeText(AddHashtagActivity.this, "hashtag added", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(AddHashtagActivity.this, "Buzz added", Toast.LENGTH_SHORT).show();
                             finish();
                         }
                         else{
-                            Toast.makeText(AddHashtagActivity.this, "hashtag could not be added", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(AddHashtagActivity.this, "Buzz could not be added", Toast.LENGTH_SHORT).show();
                             finish();
                         }
                     }
                 });
+            }
+        });
+
+        backButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent=new Intent(getApplicationContext(), UserActivity.class);
+                startActivity(intent);
+                finish();
             }
         });
 

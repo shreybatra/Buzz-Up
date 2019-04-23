@@ -98,7 +98,7 @@ public class HomeFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        getActivity().setTitle("Trending Topics");
+        getActivity().setTitle("Top Trending Local Buzz");
 
         search_box = view.findViewById(R.id.search_box);
 
