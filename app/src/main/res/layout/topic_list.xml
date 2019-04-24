@@ -20,27 +20,28 @@
         android:gravity="center"
         android:layout_marginStart="20dp"
         android:text="#1"
-        android:textColor="#000"
+        android:textColor="@color/colorTopicList"
         android:textSize="25sp" />
 
     <TextView
         android:id="@+id/topic_name"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_centerHorizontal="true"
         android:layout_below="@+id/abovemarge"
         android:text="abcd"
-        android:textColor="@color/colorPrimary"
+        android:layout_toRightOf="@+id/hashtag"
+        android:textColor="@color/colorTopicList"
         android:textSize="25sp" />
 
     <TextView
         android:id="@+id/hashtag"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_toLeftOf="@+id/topic_name"
+        android:layout_toRightOf="@+id/topic_number"
         android:layout_below="@+id/abovemarge"
+        android:layout_marginLeft="10dp"
         android:text="#"
-        android:textColor="@color/colorPrimary"
+        android:textColor="@color/colorTopicList"
         android:textStyle="bold"
         android:textSize="25sp" />
 

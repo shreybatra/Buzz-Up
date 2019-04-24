@@ -365,8 +365,7 @@ public class HomeFragment extends Fragment {
     @Override
     public void onPause() {
         super.onPause();
-
-        loop = false;
+//        loop = false;
 
 
     }
@@ -374,8 +373,7 @@ public class HomeFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
-
-        loop = true;
-
+//        loop = true;
+//        runLoop();
     }
 }

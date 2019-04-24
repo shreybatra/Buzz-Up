@@ -5,7 +5,8 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/colorActivityBackground"
-    tools:context=".HashtagActivity">
+    tools:context=".HashtagActivity"
+    android:focusableInTouchMode="true">
 
 
 
@@ -37,8 +38,12 @@
             android:layout_marginRight="16dp"
             android:layout_weight="1"
             android:textAlignment="center"
+
             android:background="@drawable/rounded_rectangle_white"
             android:hint="Search Buzz"
+            android:textSize="25dp"
+            android:layout_marginBottom="5dp"
+            android:layout_marginTop="5dp"
             android:maxLines="6" />
 
 

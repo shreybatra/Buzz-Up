@@ -16,6 +16,11 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 
+import com.google.android.gms.auth.api.Auth;
+import com.google.android.gms.auth.api.signin.GoogleSignIn;
+import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
+import com.google.android.gms.auth.api.signin.GoogleSignInClient;
+
 public class UserActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
 
     Fragment fragment;
@@ -95,10 +100,7 @@ public class UserActivity extends AppCompatActivity implements NavigationView.On
             fragment=new HomeFragment();
         } else if (id == R.id.nav_profile) {
             fragment=new ProfileFragment();
-        } else if (id == R.id.nav_team) {
-
         } else if (id == R.id.nav_logout) {
-
         }
 
         if(fragment!=null){

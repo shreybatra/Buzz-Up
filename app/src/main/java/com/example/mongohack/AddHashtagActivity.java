@@ -38,6 +38,7 @@ import org.bson.BsonArray;
 import org.bson.BsonDocument;
 import org.bson.Document;
 import org.bson.types.ObjectId;
+import org.w3c.dom.Text;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -51,7 +52,7 @@ public class AddHashtagActivity extends AppCompatActivity {
     Button submitButton, dateButton, currentLocationButton;
     ImageButton backButton;
 
-    EditText dateEditText, locationEditText;
+    TextView dateEditText, locationEditText;
     private int mYear, mMonth, mDay;
     private Date tillDate;
     public double lat=0.0;
@@ -144,7 +145,7 @@ public class AddHashtagActivity extends AppCompatActivity {
                 getSupportFragmentManager().findFragmentById(R.id.autocomplete_fragment);
 
         autocompleteFragment.setPlaceFields(Arrays.asList(Place.Field.LAT_LNG, Place.Field.NAME));
-        autocompleteFragment.setHint("Enter Custom Buzz Location");
+        autocompleteFragment.setHint("Custom Location");
 
         //autocompleteFragment.getView().setBackgroundDrawable(getResources().getDrawable(R.drawable.rounded_rectangle_white));
 

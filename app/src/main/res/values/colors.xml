@@ -1,12 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <!--<color name="colorPrimary">#e91e6</color>-->
-    <!--<color name="colorPrimary">#ff6347</color>-->
-    <color name="colorPrimary">#fe3636</color>
+    <!--<color name="colorPrimary">#E91E63</color>-->
+    <color name="colorPrimary">#FF6347</color>
+    <!--<color name="colorPrimary">#fe3636</color>-->
     <!--<color name="colorPrimary">#3160EC</color>-->
-    <color name="colorPrimaryDark">#002685</color>
+    <color name="colorPrimaryDark">#FF6347</color>
     <color name="colorAccent">#3160EC</color>
     <!--<color name="colorAccent">#D81B60</color>-->
     <color name="colorActivityBackground">#61CFDAE2</color>
+    <color name="colorTopicList">#002685</color>
 
 </resources>

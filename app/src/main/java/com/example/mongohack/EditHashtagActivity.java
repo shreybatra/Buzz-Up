@@ -83,8 +83,7 @@ public class EditHashtagActivity extends AppCompatActivity {
         currentLocationButton = findViewById(R.id.currentLocationButton);
         submitButton = findViewById(R.id.submitButton);
 
-        topicHeadingTextView = findViewById(R.id.topicHeadingTextView);
-        topicHeadingTextView.setText("Edit Buzz Name");
+
         submitButton.setText("Save Changes");
 
         client= Stitch.getDefaultAppClient();
@@ -173,7 +172,7 @@ public class EditHashtagActivity extends AppCompatActivity {
 
         AutocompleteSupportFragment autocompleteFragment = (AutocompleteSupportFragment)
                 getSupportFragmentManager().findFragmentById(R.id.autocomplete_fragment);
-        autocompleteFragment.setHint("Enter Custom Buzz Location");
+        autocompleteFragment.setHint("Custom Location");
         autocompleteFragment.setPlaceFields(Arrays.asList(Place.Field.LAT_LNG, Place.Field.NAME));
 
         autocompleteFragment.setOnPlaceSelectedListener(new PlaceSelectionListener() {
@@ -240,7 +239,8 @@ public class EditHashtagActivity extends AppCompatActivity {
 
 
 //                Log.d("DOC", .toString());
-                Task findtask = topics.sync().updateOne(new Document("owner_id", new ObjectId(client.getAuth().getUser().getId())),new_d);
+                Task findtask = topics.sync().updateOne(new Document("owner_id", new ObjectId(client.getAuth().getUser().getId())),
+                        new Document("$set",new_d));
 
                 findtask.addOnCompleteListener(new OnCompleteListener() {
                     @Override
@@ -251,7 +251,8 @@ public class EditHashtagActivity extends AppCompatActivity {
                             finish();
                         }
                         else{
-                            Toast.makeText(getApplicationContext(), "Buzz could not be added", Toast.LENGTH_SHORT).show();
+                            Log.d("ERR", task.getException().toString());
+                            Toast.makeText(getApplicationContext(), task.getException().toString(), Toast.LENGTH_LONG).show();
                             finish();
                         }
                     }

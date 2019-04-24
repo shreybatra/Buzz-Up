@@ -15,15 +15,6 @@
 
     </group>
 
-    <item android:title="Our Team">
-        <menu>
-            <item
-                android:id="@+id/nav_team"
-                android:icon="@drawable/icon_team_48"
-                android:title="About Us" />
-        </menu>
-    </item>
-
     <item android:title="Log Out">
         <menu>
             <item

@@ -72,8 +72,8 @@ public class HashtagActivity extends AppCompatActivity {
         backButton = findViewById(R.id.back_button);
 
         hashtagIdString = getIntent().getStringExtra("hashtagId");
-        //hashtagName = getIntent().getStringExtra("hashtagName");
-        hashtagName = "ipl";
+        hashtagName = getIntent().getStringExtra("hashtagName");
+//        hashtagName = "ipl";
         Log.d("hashtag name",hashtagName);
 
         topicId = new ObjectId(hashtagIdString);
