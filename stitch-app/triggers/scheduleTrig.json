@@ -1,0 +1,10 @@
+{
+    "id": "5cb996418bfd13bd0bf59ad1",
+    "name": "scheduleTrig",
+    "type": "SCHEDULED",
+    "config": {
+        "schedule": "10 15 * * *"
+    },
+    "function_name": "trigEmail",
+    "disabled": true
+}

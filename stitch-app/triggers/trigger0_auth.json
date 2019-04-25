@@ -1,0 +1,13 @@
+{
+    "id": "5caec75519644dfc5024a18b",
+    "name": "trigger0_auth",
+    "type": "AUTHENTICATION",
+    "config": {
+        "operation_type": "CREATE",
+        "providers": [
+            "oauth2-google"
+        ]
+    },
+    "function_name": "authTrigger",
+    "disabled": false
+}

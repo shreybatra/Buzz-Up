@@ -1,0 +1,11 @@
+{
+    "app_id": "mongohackstitch-awwql",
+    "config_version": 20180301,
+    "name": "MongoHackStitch",
+    "location": "US-VA",
+    "deployment_model": "GLOBAL",
+    "security": {},
+    "hosting": {
+        "enabled": false
+    }
+}
