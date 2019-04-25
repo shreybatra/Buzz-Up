@@ -180,8 +180,10 @@
                 android:id="@+id/locationButton"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="@color/colorPrimary"
-                android:text="get location"
+                android:background="@drawable/rounded_rectangle_blue"
+                android:layout_marginStart="50dp"
+                android:layout_marginEnd="50dp"
+                android:text="Open Buzz on Gmaps"
                 android:textColor="#FFF"
                 android:textStyle="bold"
                 />

@@ -239,7 +239,7 @@ public class EditHashtagActivity extends AppCompatActivity {
 
 
 //                Log.d("DOC", .toString());
-                Task findtask = topics.sync().updateOne(new Document("owner_id", new ObjectId(client.getAuth().getUser().getId())),
+                Task findtask = topics.sync().updateOne(new Document("_id", new ObjectId(hashtagIdString)),
                         new Document("$set",new_d));
 
                 findtask.addOnCompleteListener(new OnCompleteListener() {
